@@ -372,12 +372,12 @@ if not use_cylindrical_integration:
     FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
     IndexPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance, RoundHKLs=False)
     FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
-    OptimizeCrystalPlacement(PeaksWorkspace=peaks_ws,ModifiedPeaksWorkspace=peaks_ws,
-      FitInfoTable='CrystalPlacement_info',MaxIndexingError=tolerance)
+    #OptimizeCrystalPlacement(PeaksWorkspace=peaks_ws,ModifiedPeaksWorkspace=peaks_ws,
+    #  FitInfoTable='CrystalPlacement_info',MaxIndexingError=tolerance)
   else:
     FindUBUsingFFT( PeaksWorkspace=peaks_ws, MinD=min_d, MaxD=max_d, Tolerance=tolerance )
 
-  IndexPeaks( PeaksWorkspace=peaks_ws, Tolerance=tolerance )
+  IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance )
   SaveIsawPeaks( InputWorkspace=peaks_ws, AppendFile=False, Filename=niggli_integrate_file )
   SaveIsawUB( InputWorkspace=peaks_ws, Filename=niggli_matrix_file )
   anvred_integrate_fname = niggli_integrate_file
@@ -1135,7 +1135,7 @@ while True:
         #sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2)  # not sure if last term is squared
         #
         # Include instrument background constant in sigma        
-        sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2 + 16.8/cmonx*scaleFactor)
+        sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2 + 19.4/cmonx*scaleFactor)
 
         # Calculates direction cosines for scattered beam vector 
         R_IPNS, R_SNS = Rvec(twoth, az, L2)
@@ -1504,7 +1504,7 @@ if iIQ == 1 or iIQ == 3:
     
     #Sort and save the result per module, XP Wang, March 2013
     hkl_out.sort(key=itemgetter(14,15))  # sort by run and seqnum number
-    nBatch = 0
+    nBatch = int(starting_batch_number) - 1
     for iBatch, iGroup in groupby(hkl_out, itemgetter(14)):
         nBatch = nBatch + 1
         for iHKL in iGroup:

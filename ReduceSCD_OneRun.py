@@ -271,6 +271,7 @@ for i in range(peaks_ws.getNumberPeaks()):
 DeleteTableRows(TableWorkspace=peaks_ws,Rows=peaks_on_edge)
 #
 # Read or find UB for the run
+# Read or find UB for the run
 if read_UB:
   # Read orientation matrix from file
   ubpath=os.path.dirname(UB_filename)
@@ -278,15 +279,22 @@ if read_UB:
   if os.path.exists(ubpath +'%s_Niggli.mat'%(run)):
     LoadIsawUB(InputWorkspace=peaks_ws, Filename=ubpath +'%s_Niggli.mat'%(run))
     print 'Use UB: ', ubpath +'%s_Niggli.mat'%(run)
+    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
+    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+
   else:
-    LoadIsawUB(InputWorkspace=peaks_ws, Filename=UB_filename)
+    LoadIsawUB( InputWorkspace=peaks_ws, Filename=UB_filename)
+    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=False, Tolerance=tolerance)
+    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
 
 else:
   # Find a Niggli UB matrix that indexes the peaks in this run
   FindUBUsingFFT( PeaksWorkspace=peaks_ws, MinD=min_d, MaxD=max_d, Tolerance=tolerance )
+  IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=False, Tolerance=tolerance)
   
 IndexPeaks( PeaksWorkspace=peaks_ws, Tolerance=tolerance)
-FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
 #
 # Get complete list of peaks to be integrated and load the UB matrix into
 # the predicted peaks workspace, so that information can be used by the
@@ -319,19 +327,6 @@ if integrate_predicted_peaks:
 
 else:
   print "Only integrating FOUND peaks ...."
-  #
-  #Remove peaks on detector edge
-  peaks_on_edge=[]
-  for i in range(peaks_ws.getNumberPeaks()):
-    pi=peaks_ws.getPeak(i)
-    if pi.getRow()<16 or pi.getRow()>239 or pi.getCol()<16 or pi.getCol()>239:
-        peaks_on_edge.append(i)
-  DeleteTableRows(TableWorkspace=peaks_ws,Rows=peaks_on_edge)
-  #
-  #Refine UB and reindex peaks
-  FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
-  IndexPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance, RoundHKLs=False)
-  FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
 
 #
 #Delete MD workspace

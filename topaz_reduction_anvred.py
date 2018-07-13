@@ -119,7 +119,7 @@ if not os.path.exists(output_directory):
 print "\nWorking dir : %s" % os.getcwd()
 os.chdir(output_directory)
 print "\nOutput  dir : %s" % output_directory
-
+print "Starting_batch_number %d"%(starting_batch_number)
 #*****************Part One *************************************************
 #
 #           lin_abs_coef v3.
@@ -750,8 +750,8 @@ for id in range(nod):
 curhst = 0
 idet = 0
 hstnum = int(starting_batch_number) - 1    # Set the starting batch number
-cmon = 8.752E+7                                        # Scale proton charge to 1 MW-hr
-ncntr = 0                                                     # Number of processed reflections
+cmon = 8.752E+7                            # Scale proton charge to 1 MW-hr
+ncntr = 0                                  # Number of processed reflections
 
 nrun = 0
 dn = 0
@@ -971,7 +971,7 @@ while True:
         #sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2)  # not sure if last term is squared
         #
         # Include instrument background constant in sigma        
-        sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2 + 16.8/cmonx*scaleFactor)
+        sigfsq = sqrt( sigfsq**2 + (relSigSpect*fsq)**2 + 19.4/cmonx*scaleFactor)
 
         # Calculates direction cosines for scattered beam vector 
         R_IPNS, R_SNS = Rvec(twoth, az, L2)
@@ -1336,7 +1336,7 @@ if iIQ == 1 or iIQ == 3:
     
     #Sort and save the result per module, XP Wang, March 2013
     hkl_out.sort(key=itemgetter(14,15))  # sort by run and seqnum number
-    nBatch = 0
+    nBatch = int(starting_batch_number) - 1
     for iBatch, iGroup in groupby(hkl_out, itemgetter(14)):
         nBatch = nBatch + 1
         for iHKL in iGroup:
