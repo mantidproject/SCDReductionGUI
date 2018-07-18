@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>786</width>
-    <height>542</height>
+    <width>804</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QTabWidget" name="tabWidget">
@@ -35,9 +35,9 @@
          <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
-            <x>30</x>
+            <x>10</x>
             <y>40</y>
-            <width>381</width>
+            <width>751</width>
             <height>290</height>
            </rect>
           </property>
@@ -2548,8 +2548,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>706</width>
-            <height>338</height>
+            <width>751</width>
+            <height>340</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_25">
@@ -2688,10 +2688,6 @@
                </item>
               </layout>
              </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_19">
                <item>
@@ -2799,6 +2795,9 @@
              </item>
             </layout>
            </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_6"/>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -2813,7 +2812,14 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="PushButton_auto">
+      <property name="text">
+       <string>Copy Configuration File to AutoReduce</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
      <widget class="QPushButton" name="PushButton_run">
       <property name="text">
        <string>Run Reduction with Configuration File</string>
@@ -2827,7 +2833,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>786</width>
+     <width>804</width>
      <height>20</height>
     </rect>
    </property>

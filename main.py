@@ -6,6 +6,7 @@ import sys  # We need sys so that we can pass argv to QApplication
 from subprocess import PIPE, Popen
 import design  # This file holds our MainWindow and all design related things
 import ReduceDictionary
+import shlex
 import math
 
 # it also keeps events etc that we defined in Qt Designer
@@ -72,6 +73,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.dataDirectory_ledt.textChanged.connect(self.change_datadir)
         self.dataDirectory_btn.clicked.connect(self.browse_datadir)  # When the button is pressed
         self.PushButton_config.clicked.connect(self.accept)  # When the button is pressed
+        self.PushButton_auto.clicked.connect(self.auto)  # When the button is pressed
         self.PushButton_run.clicked.connect(self.run)  # When the button is pressed
 
     def format_template(self, name, outfile, **kwargs):
@@ -95,7 +97,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.pointGroup = "-1"
         self.instrument = "TOPAZ"
         self.runNums = ""
-        self.dataDirectory="None"
+        baseDir = os.getcwd()
+        self.dataDirectory = baseDir[:baseDir.find("shared")]+"data/"
+        self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
         self.calFileName = "/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal"
         self.subtract_bkg = False
@@ -148,13 +152,21 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.pointGroup_cmbx.setCurrentIndex(self.pointGroup_cmbx.findText(self.pointGroup, QtCore.Qt.MatchFixedString))
         self.instrument = str(params_dictionary[ "instrument_name" ])
         self.instrument_cmbx.setCurrentIndex(self.instrument_cmbx.findText(self.instrument, QtCore.Qt.MatchFixedString))
-        self.runNums = str(params_dictionary[ "run_nums" ])
-        str1 = str(self.runNums).strip('[]')
-        str1 = str1.replace(" ", "")
-        str1 = str1.replace("'", "")
-        self.runNums_ledt.setText(str1)
-        self.dataDirectory=str(params_dictionary[ "data_directory" ])
-        self.dataDirectory_ledt.setText(self.dataDirectory)
+        file = open(config_file_name)
+        for line in file:
+          line = line.strip();
+          line = line.rstrip();
+          if (not line.startswith('#')) and len(line) > 2:
+            words = shlex.split(line)
+            if len(words) > 1:
+              if words[0] == "run_nums":
+                self.runNums = words[1]
+        self.runNums = str(self.runNums).strip('[]')
+        self.runNums = self.runNums.replace(" ", "")
+        self.runNums = self.runNums.replace("'", "")
+        self.runNums_ledt.setText(self.runNums)
+        #self.dataDirectory=str(params_dictionary[ "data_directory" ])
+        #self.dataDirectory_ledt.setText(self.dataDirectory)
         #Do not copy experiment name so you will not overwrite previous data
         #self.expName = str(params_dictionary[ "exp_name" ])
         self.expName_ledt.setText(self.expName)
@@ -604,10 +616,13 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         }
 
         templatePath = "./template.config"
-        autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce.config"
         self.path = self.expName+".config"
         self.format_template(templatePath, self.path, **kw)
         print ("Wrote new config file: ",self.path)
+
+    def auto(self):
+        baseDir = os.getcwd()
+        autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce.config"
         copyfile(self.path, autoConfig)
 
         with open(autoConfig, 'r') as file :
@@ -618,6 +633,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         print ("Copied config file: ",autoConfig)
 
     def run(self):
+        self.accept()
         self.proc = Popen(['/usr/bin/python','topaz_reduction.py', str(self.path)])
         print ("Finished reduction")
 
