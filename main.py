@@ -98,7 +98,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.instrument = "TOPAZ"
         self.runNums = ""
         baseDir = os.getcwd()
-        self.dataDirectory = baseDir[:baseDir.find("shared")]+"data/"
+        self.dataDirectory = baseDir[:baseDir.find("shared")]+"data"
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
         self.calFileName = "/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal"
@@ -407,6 +407,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def change_datadir(self):
         self.dataDirectory = self.dataDirectory_ledt.text()
+        if self.dataDirectory == "":
+            self.dataDirectory = "None"
 
     def Configbrowse_file(self):
         self.ConfigFileName = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
