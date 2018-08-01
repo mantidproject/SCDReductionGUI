@@ -1369,7 +1369,7 @@ class Ui_MainWindow(object):
         self.centering_cmbx.setItemText(5, _translate("MainWindow", "F", None))
         self.centering_cmbx.setItemText(6, _translate("MainWindow", "Robv", None))
         self.centering_cmbx.setItemText(7, _translate("MainWindow", "Rrev", None))
-        self.label_35.setText(_translate("MainWindow", "Laue group", None))
+        self.label_35.setText(_translate("MainWindow", "Crystal system", None))
         self.laueGroup_cmbx.setToolTip(_translate("MainWindow", "Select laue group for ones with selected centering.", None))
         self.laueGroup_cmbx.setItemText(0, _translate("MainWindow", "Triclinic", None))
         self.laueGroup_cmbx.setItemText(1, _translate("MainWindow", "Monoclinic", None))

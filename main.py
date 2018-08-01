@@ -97,7 +97,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.pointGroup = "-1"
         self.instrument = "TOPAZ"
         self.runNums = ""
-        baseDir = os.getcwd()
+        baseDir = os.environ['PWD']
         self.dataDirectory = baseDir[:baseDir.find("shared")]+"data"
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
@@ -336,6 +336,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Tetragonal'),
                 self.tr('Monoclinic'),
                 self.tr('Cubic'),
+                self.tr('Orthorhombic'),
                 ]
         elif self.centering == "A":
             list1 = [
@@ -564,7 +565,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         
     def accept(self):
         #Generate config file 
-        baseDir = os.getcwd()
+        baseDir = os.environ['PWD']
         outDir = baseDir[:baseDir.find("shared")]+"shared/"+self.expName
         print ("Working directory: ",outDir)
         pg = self.pointGroup
@@ -623,7 +624,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         print ("Wrote new config file: ",self.path)
 
     def auto(self):
-        baseDir = os.getcwd()
+        baseDir = os.environ['PWD']
         autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce.config"
         copyfile(self.path, autoConfig)
 

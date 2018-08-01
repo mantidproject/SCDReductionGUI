@@ -619,7 +619,7 @@
               <item>
                <widget class="QLabel" name="label_35">
                 <property name="text">
-                 <string>Laue group</string>
+                 <string>Crystal system</string>
                 </property>
                </widget>
               </item>
