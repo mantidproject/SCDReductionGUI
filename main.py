@@ -75,6 +75,161 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.PushButton_config.clicked.connect(self.accept)  # When the button is pressed
         self.PushButton_auto.clicked.connect(self.auto)  # When the button is pressed
         self.PushButton_run.clicked.connect(self.run)  # When the button is pressed
+        #plot data
+        self.h1.currentIndexChanged.connect(self.change_h1)
+        self.k1.currentIndexChanged.connect(self.change_k1)
+        self.l1.currentIndexChanged.connect(self.change_l1)
+        self.xmin1.textChanged.connect(self.change_xmin1)
+        self.xmax1.textChanged.connect(self.change_xmax1)
+        self.xsteps1.textChanged.connect(self.change_xsteps1)
+        self.ymin1.textChanged.connect(self.change_ymin1)
+        self.ymax1.textChanged.connect(self.change_ymax1)
+        self.ysteps1.textChanged.connect(self.change_ysteps1)
+        self.slice1.textChanged.connect(self.change_slice1)
+        self.thickness1.textChanged.connect(self.change_thickness1)
+        self.h2.currentIndexChanged.connect(self.change_h2)
+        self.k2.currentIndexChanged.connect(self.change_k2)
+        self.l2.currentIndexChanged.connect(self.change_l2)
+        self.xmin2.textChanged.connect(self.change_xmin2)
+        self.xmax2.textChanged.connect(self.change_xmax2)
+        self.xsteps2.textChanged.connect(self.change_xsteps2)
+        self.ymin2.textChanged.connect(self.change_ymin2)
+        self.ymax2.textChanged.connect(self.change_ymax2)
+        self.ysteps2.textChanged.connect(self.change_ysteps2)
+        self.slice2.textChanged.connect(self.change_slice2)
+        self.thickness2.textChanged.connect(self.change_thickness2)
+        self.h3.currentIndexChanged.connect(self.change_h3)
+        self.k3.currentIndexChanged.connect(self.change_k3)
+        self.l3.currentIndexChanged.connect(self.change_l3)
+        self.xmin3.textChanged.connect(self.change_xmin3)
+        self.xmax3.textChanged.connect(self.change_xmax3)
+        self.xsteps3.textChanged.connect(self.change_xsteps3)
+        self.ymin3.textChanged.connect(self.change_ymin3)
+        self.ymax3.textChanged.connect(self.change_ymax3)
+        self.ysteps3.textChanged.connect(self.change_ysteps3)
+        self.slice3.textChanged.connect(self.change_slice3)
+        self.thickness3.textChanged.connect(self.change_thickness3)
+        self.FluxFile_ledt.textChanged.connect(self.change_Fluxfile)
+        self.FluxFile_btn.clicked.connect(self.Fluxbrowse_file)  # When the button is pressed
+        self.SAFile_ledt.textChanged.connect(self.change_SAfile)
+        self.SAFile_btn.clicked.connect(self.SAbrowse_file)  # When the button is pressed
+
+    def change_h1(self):
+        self._h1 = self.h1.currentText()
+
+    def change_k1(self):
+        self._k1 = self.k1.currentText()
+
+    def change_l1(self):
+        self._l1 = self.l1.currentText()
+
+    def change_xmin1(self):
+        self._xmin1 = self.toDouble(self.xmin1.text())
+
+    def change_xmax1(self):
+        self._xmax1 = self.toDouble(self.xmax1.text())
+
+    def change_xsteps1(self):
+        self._xsteps1 = self.toInt(self.xsteps1.text())
+
+    def change_ymin1(self):
+        self._ymin1 = self.toDouble(self.ymin1.text())
+
+    def change_ymax1(self):
+        self._ymax1 = self.toDouble(self.ymax1.text())
+
+    def change_ysteps1(self):
+        self._ysteps1 = self.toInt(self.ysteps1.text())
+
+    def change_slice1(self):
+        self._slice1 = self.toDouble(self.slice1.text())
+        thickness1 = self.toFloat(self._thickness1)
+        self._zmin1 = self._slice1 - 0.5 * thickness1
+        self._zmax1 = self._slice1 + 0.5 * thickness1
+
+    def change_thickness1(self):
+        self._thickness1 = self.toDouble(self.thickness1.text())
+        slice1 = self.toFloat(self._slice1)
+        self._zmin1 = slice1 - 0.5 * self._thickness1
+        self._zmax1 = slice1 + 0.5 * self._thickness1
+
+    def change_h2(self):
+        self._h2 = self.h2.currentText()
+
+    def change_k2(self):
+        self._k2 = self.k2.currentText()
+
+    def change_l2(self):
+        self._l2 = self.l2.currentText()
+
+    def change_xmin2(self):
+        self._xmin2 = self.toDouble(self.xmin2.text())
+
+    def change_xmax2(self):
+        self._xmax2 = self.toDouble(self.xmax2.text())
+
+    def change_xsteps2(self):
+        self._xsteps2 = self.toInt(self.xsteps2.text())
+
+    def change_ymin2(self):
+        self._ymin2 = self.toDouble(self.ymin2.text())
+
+    def change_ymax2(self):
+        self._ymax2 = self.toDouble(self.ymax2.text())
+
+    def change_ysteps2(self):
+        self._ysteps2 = self.toInt(self.ysteps2.text())
+
+    def change_slice2(self):
+        self._slice2 = self.toDouble(self.slice2.text())
+        thickness2 = self.toFloat(self._thickness2)
+        self._zmin2 = self._slice2 - 0.5 * thickness2
+        self._zmax2 = self._slice2 + 0.5 * thickness2
+
+    def change_thickness2(self):
+        self._thickness2 = self.toDouble(self.thickness2.text())
+        slice2 = self.toFloat(self._slice2)
+        self._zmin2 = slice2 - 0.5 * self._thickness2
+        self._zmax2 = slice2 + 0.5 * self._thickness2
+
+    def change_h3(self):
+        self._h3 = self.h3.currentText()
+
+    def change_k3(self):
+        self._k3 = self.k3.currentText()
+
+    def change_l3(self):
+        self._l3 = self.l3.currentText()
+
+    def change_xmin3(self):
+        self._xmin3 = self.toDouble(self.xmin3.text())
+
+    def change_xmax3(self):
+        self._xmax3 = self.toDouble(self.xmax3.text())
+
+    def change_xsteps3(self):
+        self._xsteps3 = self.toInt(self.xsteps3.text())
+
+    def change_ymin3(self):
+        self._ymin3 = self.toDouble(self.ymin3.text())
+
+    def change_ymax3(self):
+        self._ymax3 = self.toDouble(self.ymax3.text())
+
+    def change_ysteps3(self):
+        self._ysteps3 = self.toInt(self.ysteps3.text())
+
+    def change_slice3(self):
+        self._slice3 = self.toDouble(self.slice3.text())
+        thickness3 = self.toFloat(self._thickness3)
+        self._zmin3 = self._slice3 - 0.5 * thickness3
+        self._zmax3 = self._slice3 + 0.5 * thickness3
+
+    def change_thickness3(self):
+        self._thickness3 = self.toDouble(self.thickness3.text())
+        slice3 = self.toFloat(self._slice3)
+        self._zmin3 = slice3 - 0.5 * self._thickness3
+        self._zmax3 = slice3 + 0.5 * self._thickness3
 
     def format_template(self, name, outfile, **kwargs):
         "This fills in the values for the template called 'name' and writes it to 'outfile'"
@@ -133,6 +288,47 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.maxWavelength = str( 3.5)
         self.z_score = str( 4.0)
         self.starting_batch_number = str( 1)
+        self._h1 = "H"
+        self._k1 = "K"
+        self._l1 = "L"
+        self._xmin1 = ""
+        self._xmax1 = ""
+        self._xsteps1 = str(400)
+        self._ymin1 = ""
+        self._ymax1 = ""
+        self._ysteps1 = str(400)
+        self._slice1 = str(0.0)
+        self._thickness1 = str(0.01)
+        self._zmin1 = str(-0.0005)
+        self._zmax1 = str(0.0005)
+        self._h2 = "H"
+        self._k2 = "L"
+        self._l2 = "K"
+        self._xmin2 = ""
+        self._xmax2 = ""
+        self._xsteps2 = str(400)
+        self._ymin2 = ""
+        self._ymax2 = ""
+        self._ysteps2 = str(400)
+        self._slice2 = str(0.0)
+        self._thickness2 = str(0.01)
+        self._zmin2 = str(-0.0005)
+        self._zmax2 = str(0.0005)
+        self._h3 = "K"
+        self._k3 = "L"
+        self._l3 = "H"
+        self._xmin3 = ""
+        self._xmax3 = ""
+        self._xsteps3 = str(400)
+        self._ymin3 = ""
+        self._ymax3 = ""
+        self._ysteps3 = str(400)
+        self._slice3 = str(0.0)
+        self._thickness3 = str(0.01)
+        self._zmin3 = str(-0.0005)
+        self._zmax3 = str(0.0005)
+        self.SAFile = "/SNS/TOPAZ/IPTS-18474/shared/2017B/Vanadium/SA_Spectra_no_mask/solidAngle.nxs"
+        self.FluxFile = "/SNS/TOPAZ/IPTS-18474/shared/2017B/Vanadium/SA_Spectra_no_mask/flux_not_integrated.nxs"
 
     def loadConfig(self, config_file_name):
         params_dictionary = ReduceDictionary.LoadDictionary( config_file_name )
@@ -382,6 +578,12 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         if self.ConfigFileName != "None":
             self.loadConfig(self.ConfigFileName)
 
+    def change_SAfile(self):
+        self.SAFile = self.SAFile_ledt.text()
+
+    def change_Fluxfile(self):
+        self.FluxFile = self.FluxFile_ledt.text()
+
     def change_UBfile(self):
         self.UBFileName = str(self.UBFileName_ledt.text())
         if self.UBFileName != "None" and self.UBFileName != "":
@@ -415,6 +617,16 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.ConfigFileName = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
         if self.ConfigFileName:
             self.ConfigFileName_ledt.setText(self.ConfigFileName)
+
+    def SAbrowse_file(self):
+        self.SAFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        if self.SAFile:
+            self.SAFile_ledt.setText(self.SAFile)
+
+    def Fluxbrowse_file(self):
+        self.FluxFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        if self.FluxFile:
+            self.FluxFile_ledt.setText(self.FluxFile)
 
     def UBbrowse_file(self):
         self.UBFileName = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.mat') # Filename line
@@ -491,7 +703,23 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         #Dmin is specified instead of Qmax
         self.maxQ = 2*math.pi/self.toDouble(self.maxQspace_ledt_2.text())
 
+    def toInt(self, temp):
+        result = int(temp)
+        return result
+
+    def toFloat(self, temp):
+        # for python strings
+        if type(temp) is float:
+            return temp
+        elif '.' in temp or "e" in temp:
+            result = float(temp)
+        else:
+            temp_int = int(temp)
+            result = float(temp_int)
+        return result
+
     def toDouble(self, temp):
+        # for qt strings
         if temp.contains('.') or temp.contains("e"):
             result = float(temp)
         else:
@@ -621,12 +849,59 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         templatePath = "./template.config"
         self.path = self.expName+".config"
         self.format_template(templatePath, self.path, **kw)
-        print ("Wrote new config file: ",self.path)
+        self.plotConfig()
+
+    def plotConfig(self):
+        import configparser
+        
+        filename = './plotConfig.ini'
+        config = configparser.ConfigParser()
+        config['PLOT1'] = {'axis1': self._h1,
+                     'axis2': self._k1,
+                     'axis3': self._l1,
+                     'xmin': self._xmin1,
+                     'xmax': self._xmax1,
+                     'xsteps': self._xsteps1,
+                     'ymin': self._ymin1,
+                     'ymax': self._ymax1,
+                     'ysteps': self._ysteps1,
+                     'zmin': self._zmin1,
+                     'zmax': self._zmax1}
+        config['PLOT2'] = {'axis1': self._h2,
+                     'axis2': self._k2,
+                     'axis3': self._l2,
+                     'xmin': self._xmin2,
+                     'xmax': self._xmax2,
+                     'xsteps': self._xsteps2,
+                     'ymin': self._ymin2,
+                     'ymax': self._ymax2,
+                     'ysteps': self._ysteps2,
+                     'zmin': self._zmin2,
+                     'zmax': self._zmax2}
+        config['PLOT3'] = {'axis1': self._h3,
+                     'axis2': self._k3,
+                     'axis3': self._l3,
+                     'xmin': self._xmin3,
+                     'xmax': self._xmax3,
+                     'xsteps': self._xsteps3,
+                     'ymin': self._ymin3,
+                     'ymax': self._ymax3,
+                     'ysteps': self._ysteps3,
+                     'zmin': self._zmin3,
+                     'zmax': self._zmax3}
+        config['NORMALIZATION'] = {'SAFile': self.SAFile,
+                     'FluxFile': self.FluxFile}
+        with open(filename, 'w') as configfile:
+           config.write(configfile)
+        
+
 
     def auto(self):
         baseDir = os.environ['PWD']
         autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce.config"
         copyfile(self.path, autoConfig)
+        autoPlotConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/plotConfig.ini"
+        copyfile('./plotConfig.ini', autoPlotConfig)
 
         with open(autoConfig, 'r') as file :
           filedata = file.read()
