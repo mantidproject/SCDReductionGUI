@@ -327,8 +327,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._thickness3 = str(0.01)
         self._zmin3 = str(-0.0005)
         self._zmax3 = str(0.0005)
-        self.SAFile = "/SNS/TOPAZ/IPTS-18474/shared/2017B/Vanadium/SA_Spectra_no_mask/solidAngle.nxs"
-        self.FluxFile = "/SNS/TOPAZ/IPTS-18474/shared/2017B/Vanadium/SA_Spectra_no_mask/flux_not_integrated.nxs"
+        self.SAFile = ""
+        self.FluxFile = ""
 
     def loadConfig(self, config_file_name):
         params_dictionary = ReduceDictionary.LoadDictionary( config_file_name )
