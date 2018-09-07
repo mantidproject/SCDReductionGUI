@@ -855,6 +855,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         import configparser
         
         filename = './plotConfig.ini'
+        baseDir = os.environ['PWD']
+        UBDirectory = baseDir[:baseDir.find("shared")]+"shared/"+self.expName + "/" 
         config = configparser.ConfigParser()
         config['PLOT1'] = {'axis1': self._h1,
                      'axis2': self._k1,
@@ -889,6 +891,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                      'ysteps': self._ysteps3,
                      'zmin': self._zmin3,
                      'zmax': self._zmax3}
+        config['REDUCTION'] = {'CalFile': self.calFileName,
+                     'UBDirectory': UBDirectory}
         config['NORMALIZATION'] = {'SAFile': self.SAFile,
                      'FluxFile': self.FluxFile}
         with open(filename, 'w') as configfile:
