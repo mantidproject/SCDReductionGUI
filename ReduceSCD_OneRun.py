@@ -160,7 +160,7 @@ minQ ='-%s,-%s,-%s'%(Qmax,Qmax,Qmax)
 # directory or from findnexus
 #
 if data_directory is not None:
-  full_name = data_directory + "/" + instrument_name + "_" + run + "_event.nxs"
+  full_name = data_directory + "/" + instrument_name + "_" + run + ".nxs.h5"
 else:
   temp_buffer = os.popen("findnexus --event -i "+instrument_name+" "+str(run) )
   full_name = temp_buffer.readline()

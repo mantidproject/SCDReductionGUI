@@ -8,6 +8,7 @@ import design  # This file holds our MainWindow and all design related things
 import ReduceDictionary
 import shlex
 import math
+import time
 
 # it also keeps events etc that we defined in Qt Designer
 import os  # For listing filepath methods
@@ -902,24 +903,12 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def auto(self):
         baseDir = os.environ['PWD']
-        autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce.config"
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce"+timestr+".config"
         copyfile(self.path, autoConfig)
-        autoPlotConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/plotConfig.ini"
+        autoPlotConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/plotConfig"+timestr+".ini"
+
         copyfile('./plotConfig.ini', autoPlotConfig)
-
-        #with open(autoConfig, 'r') as file :
-        #  filedata = file.read()
-        #filedata = filedata.replace('shared/'+self.expName, 'shared/autoreduce/'+self.expName)
-        #with open(autoConfig, 'w') as file:
-        #  file.write(filedata)
-        #print ("Copied config file: ",autoConfig)
-
-        #with open(autoPlotConfig, 'r') as file :
-        #  filedata = file.read()
-        #filedata = filedata.replace('shared/'+self.expName, 'shared/autoreduce/'+self.expName)
-        #with open(autoPlotConfig, 'w') as file:
-        #  file.write(filedata)
-        #print ("Copied plot config file: ",autoConfig)        
         
 
     def run(self):
