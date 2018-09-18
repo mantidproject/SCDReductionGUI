@@ -299,8 +299,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ysteps1 = str(400)
         self._slice1 = str(0.0)
         self._thickness1 = str(0.01)
-        self._zmin1 = str(-0.0005)
-        self._zmax1 = str(0.0005)
+        self._zmin1 = str(-0.005)
+        self._zmax1 = str(0.005)
         self._h2 = "H"
         self._k2 = "L"
         self._l2 = "K"
@@ -312,8 +312,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ysteps2 = str(400)
         self._slice2 = str(0.0)
         self._thickness2 = str(0.01)
-        self._zmin2 = str(-0.0005)
-        self._zmax2 = str(0.0005)
+        self._zmin2 = str(-0.005)
+        self._zmax2 = str(0.005)
         self._h3 = "K"
         self._k3 = "L"
         self._l3 = "H"
@@ -325,8 +325,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ysteps3 = str(400)
         self._slice3 = str(0.0)
         self._thickness3 = str(0.01)
-        self._zmin3 = str(-0.0005)
-        self._zmax3 = str(0.0005)
+        self._zmin3 = str(-0.005)
+        self._zmax3 = str(0.005)
         self.SAFile = ""
         self.FluxFile = ""
 
@@ -794,7 +794,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
     def accept(self):
         #Generate config file 
         baseDir = os.environ['PWD']
-        outDir = baseDir[:baseDir.find("shared")]+"shared/"+self.expName
+        outDir = baseDir[:baseDir.find("shared")]+"shared/"+self.expName + "/"
         print ("Working directory: ",outDir)
         pg = self.pointGroup
         print ("Point group: ",pg)
@@ -907,12 +907,20 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         autoPlotConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/plotConfig.ini"
         copyfile('./plotConfig.ini', autoPlotConfig)
 
-        with open(autoConfig, 'r') as file :
-          filedata = file.read()
-        filedata = filedata.replace('shared/'+self.expName, 'shared/autoreduce')
-        with open(autoConfig, 'w') as file:
-          file.write(filedata)
-        print ("Copied config file: ",autoConfig)
+        #with open(autoConfig, 'r') as file :
+        #  filedata = file.read()
+        #filedata = filedata.replace('shared/'+self.expName, 'shared/autoreduce/'+self.expName)
+        #with open(autoConfig, 'w') as file:
+        #  file.write(filedata)
+        #print ("Copied config file: ",autoConfig)
+
+        #with open(autoPlotConfig, 'r') as file :
+        #  filedata = file.read()
+        #filedata = filedata.replace('shared/'+self.expName, 'shared/autoreduce/'+self.expName)
+        #with open(autoPlotConfig, 'w') as file:
+        #  file.write(filedata)
+        #print ("Copied plot config file: ",autoConfig)        
+        
 
     def run(self):
         self.accept()
