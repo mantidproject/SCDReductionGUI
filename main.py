@@ -254,7 +254,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.instrument = "TOPAZ"
         self.runNums = ""
         baseDir = os.environ['PWD']
-        self.dataDirectory = baseDir[:baseDir.find("shared")]+"data"
+        self.dataDirectory = baseDir[:baseDir.find("shared")]+"nexus"
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
         self.calFileName = "/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal"
