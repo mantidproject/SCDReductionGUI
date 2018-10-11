@@ -620,12 +620,12 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
             self.ConfigFileName_ledt.setText(self.ConfigFileName)
 
     def SAbrowse_file(self):
-        self.SAFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        self.SAFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.nxs *.h5') # Filename line
         if self.SAFile:
             self.SAFile_ledt.setText(self.SAFile)
 
     def Fluxbrowse_file(self):
-        self.FluxFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        self.FluxFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.nxs *.h5') # Filename line
         if self.FluxFile:
             self.FluxFile_ledt.setText(self.FluxFile)
 
