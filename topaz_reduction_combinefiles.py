@@ -28,7 +28,6 @@ from operator import itemgetter
 from itertools import groupby
 
 sys.path.insert(0,"/opt/mantidnightly/bin")
-#sys.path.insert(0,"/opt/mantid/bin")
 
 import ReduceDictionary
 
