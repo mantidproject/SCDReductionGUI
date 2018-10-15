@@ -28,7 +28,6 @@ from operator import itemgetter
 from itertools import groupby
 
 sys.path.insert(0,"/opt/mantidnightly/bin")
-
 import ReduceDictionary
 
 from mantid.simpleapi import *
@@ -753,10 +752,16 @@ if True:
 #          43:1.199689,46:1.066310,47:1.08897,48:0.82660,49:0.81487}
 
 #Det Scale,Scolecite 2018B 3-3 mm BN Aperture
-detScale={16:1.192051,17:0.929431,18:0.89680,19:0.87531,\
-         22:1.059484,26:0.935278,27:0.88258,28:0.92069,29:0.86587,\
-         33:1.084642,36:1.13744,37:1.10597,38:0.92006,39:0.89196,\
-         46:1.130662,47:1.00365,48:1.09350,49:1.07460}
+#detScale={16:1.192051,17:0.929431,18:0.89680,19:0.87531,\
+#         22:1.059484,26:0.935278,27:0.88258,28:0.92069,29:0.86587,\
+#         33:1.084642,36:1.13744,37:1.10597,38:0.92006,39:0.89196,\
+#         46:1.130662,47:1.00365,48:1.09350,49:1.07460}
+
+# Det Scale, Si 2-3 mm BN Aperture Oct. 1 2018
+detScale={16:0.985425,17:1.012897,18:0.96796,19:0.88418,\
+        20:0.770015,22:1.108947,26:1.04216,27:0.95799,28:0.93083,29:0.80043,\
+        33:1.183736,36:1.04361,37:1.16065,38:0.94089,39:0.79518,\
+        46:1.281827,47:1.06494,48:1.09645,49:0.97189}
 
 # open the anvred.log file in the working directory
 fileName = output_directory + '/anvred3.log'
@@ -1420,7 +1425,7 @@ if centering == "R":
 print('\nLattice Type: {}'.format(lattice_centering))
 
 #
-if str(point_group.getCrystalSystem()) =='Monoclinic':
+if str(point_group.getCrystalSystem()) =='Monoclinic' or str(point_group.getCrystalSystem()) =='Trigonal':
     pg_symbol =str(point_group.getHMSymbol())
 else:
     pg_symbol =str(str(point_group.getHMSymbol()) +' (' +str(point_group.getCrystalSystem())+')')
@@ -1441,7 +1446,7 @@ statistics = statistics_table.row(0)
 
 print '\nCrystal symmetry'
 print('               Point Group: {}'.format(point_group.getHMSymbol()))
-print ('          Lattice Sysstem: {}'.format(point_group.getCrystalSystem()))
+print ('           Lattice System: {}'.format(point_group.getCrystalSystem()))
 print ('        Lattice Centering: {}'.format(lattice_centering))
 print '\nPeak Statistics'
 print ('          Number of Peaks: {0}'.format(sorted.getNumberPeaks()))

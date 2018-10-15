@@ -254,7 +254,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.instrument = "TOPAZ"
         self.runNums = ""
         baseDir = os.environ['PWD']
-        self.dataDirectory = baseDir[:baseDir.find("shared")]+"data"
+        self.dataDirectory = baseDir[:baseDir.find("shared")]+"nexus"
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
         self.calFileName = "/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal"
@@ -470,7 +470,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('422'),
                 self.tr('4mm'),
                 ]
-        elif self.laueGroup == "Trigonal - Rhombohedral":
+        elif self.laueGroup == "Rhombohedral":
             list1 = [
                 self.tr('-3'),
                 self.tr('-3m'),
@@ -524,7 +524,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Monoclinic'),
                 self.tr('Orthorhombic'),
                 self.tr('Tetragonal'),
-                self.tr('Trigonal - Rhombohedral'),
+                self.tr('Rhombohedral'),
                 self.tr('Hexagonal'),
                 self.tr('Cubic'),
                 ]
@@ -533,16 +533,6 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Tetragonal'),
                 self.tr('Monoclinic'),
                 self.tr('Cubic'),
-                self.tr('Orthorhombic'),
-                ]
-        elif self.centering == "A":
-            list1 = [
-                self.tr('Monoclinic'),
-                self.tr('Orthorhombic'),
-                ]
-        elif self.centering == "B":
-            list1 = [
-                self.tr('Monoclinic'),
                 self.tr('Orthorhombic'),
                 ]
         elif self.centering == "C":
@@ -555,13 +545,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Orthorhombic'),
                 self.tr('Cubic'),
                 ]
-        elif self.centering == "Robv":
+        elif self.centering == "R":
             list1 = [
-                self.tr('Trigonal - Rhombohedral'),
-                ]
-        elif self.centering == "Rrev":
-            list1 = [
-                self.tr('Trigonal - Rhombohedral'),
+                self.tr('Rhombohedral'),
                 ]
         self.laueGroup_cmbx.addItems(list1)
 
@@ -620,12 +606,12 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
             self.ConfigFileName_ledt.setText(self.ConfigFileName)
 
     def SAbrowse_file(self):
-        self.SAFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        self.SAFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.nxs *.h5') # Filename line
         if self.SAFile:
             self.SAFile_ledt.setText(self.SAFile)
 
     def Fluxbrowse_file(self):
-        self.FluxFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.config') # Filename line
+        self.FluxFile = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '', '*.nxs *.h5') # Filename line
         if self.FluxFile:
             self.FluxFile_ledt.setText(self.FluxFile)
 
