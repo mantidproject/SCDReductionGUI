@@ -470,7 +470,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('422'),
                 self.tr('4mm'),
                 ]
-        elif self.laueGroup == "Trigonal - Rhombohedral":
+        elif self.laueGroup == "Rhombohedral":
             list1 = [
                 self.tr('-3'),
                 self.tr('-3m'),
@@ -524,7 +524,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Monoclinic'),
                 self.tr('Orthorhombic'),
                 self.tr('Tetragonal'),
-                self.tr('Trigonal - Rhombohedral'),
+                self.tr('Rhombohedral'),
                 self.tr('Hexagonal'),
                 self.tr('Cubic'),
                 ]
@@ -533,16 +533,6 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Tetragonal'),
                 self.tr('Monoclinic'),
                 self.tr('Cubic'),
-                self.tr('Orthorhombic'),
-                ]
-        elif self.centering == "A":
-            list1 = [
-                self.tr('Monoclinic'),
-                self.tr('Orthorhombic'),
-                ]
-        elif self.centering == "B":
-            list1 = [
-                self.tr('Monoclinic'),
                 self.tr('Orthorhombic'),
                 ]
         elif self.centering == "C":
@@ -555,13 +545,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('Orthorhombic'),
                 self.tr('Cubic'),
                 ]
-        elif self.centering == "Robv":
+        elif self.centering == "R":
             list1 = [
-                self.tr('Trigonal - Rhombohedral'),
-                ]
-        elif self.centering == "Rrev":
-            list1 = [
-                self.tr('Trigonal - Rhombohedral'),
+                self.tr('Rhombohedral'),
                 ]
         self.laueGroup_cmbx.addItems(list1)
 

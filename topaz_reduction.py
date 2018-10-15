@@ -28,7 +28,6 @@ from operator import itemgetter
 from itertools import groupby
 
 sys.path.insert(0,"/opt/mantidnightly/bin")
-
 import ReduceDictionary
 
 from mantid.simpleapi import *
@@ -1426,7 +1425,7 @@ if centering == "R":
 print('\nLattice Type: {}'.format(lattice_centering))
 
 #
-if str(point_group.getCrystalSystem()) =='Monoclinic':
+if str(point_group.getCrystalSystem()) =='Monoclinic' or str(point_group.getCrystalSystem()) =='Trigonal':
     pg_symbol =str(point_group.getHMSymbol())
 else:
     pg_symbol =str(str(point_group.getHMSymbol()) +' (' +str(point_group.getCrystalSystem())+')')
@@ -1447,7 +1446,7 @@ statistics = statistics_table.row(0)
 
 print '\nCrystal symmetry'
 print('               Point Group: {}'.format(point_group.getHMSymbol()))
-print ('          Lattice Sysstem: {}'.format(point_group.getCrystalSystem()))
+print ('           Lattice System: {}'.format(point_group.getCrystalSystem()))
 print ('        Lattice Centering: {}'.format(lattice_centering))
 print '\nPeak Statistics'
 print ('          Number of Peaks: {0}'.format(sorted.getNumberPeaks()))

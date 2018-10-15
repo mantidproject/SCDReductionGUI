@@ -589,16 +589,6 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>A</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>B</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
                   <string>C</string>
                  </property>
                 </item>
@@ -609,12 +599,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Robv</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Rrev</string>
+                  <string>R</string>
                  </property>
                 </item>
                </widget>
@@ -663,7 +648,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Trigonal - Rhombohedral</string>
+                  <string>Rhombohedral</string>
                  </property>
                 </item>
                 <item>
@@ -5143,79 +5128,6 @@
            </layout>
           </item>
          </layout>
-         <zorder>l2</zorder>
-         <zorder>k1</zorder>
-         <zorder>label_51</zorder>
-         <zorder>h2</zorder>
-         <zorder>ymin1</zorder>
-         <zorder>label_7</zorder>
-         <zorder>ymax1</zorder>
-         <zorder>label_9</zorder>
-         <zorder>ysteps1</zorder>
-         <zorder>label_10</zorder>
-         <zorder>l1</zorder>
-         <zorder>slice1</zorder>
-         <zorder>label_16</zorder>
-         <zorder>thickness1</zorder>
-         <zorder>h1</zorder>
-         <zorder>label_29</zorder>
-         <zorder>xmax1</zorder>
-         <zorder>xmin1</zorder>
-         <zorder>label_3</zorder>
-         <zorder>label_5</zorder>
-         <zorder>label_4</zorder>
-         <zorder>xsteps1</zorder>
-         <zorder>label</zorder>
-         <zorder>xsteps2</zorder>
-         <zorder>xmax2</zorder>
-         <zorder>label_26</zorder>
-         <zorder>label_37</zorder>
-         <zorder>label_39</zorder>
-         <zorder>label_38</zorder>
-         <zorder>label_41</zorder>
-         <zorder>label_40</zorder>
-         <zorder>ymax2</zorder>
-         <zorder>ysteps2</zorder>
-         <zorder>label_30</zorder>
-         <zorder>label_55</zorder>
-         <zorder>label_56</zorder>
-         <zorder>label_60</zorder>
-         <zorder>label_61</zorder>
-         <zorder>thickness3</zorder>
-         <zorder>xsteps3</zorder>
-         <zorder>xmax3</zorder>
-         <zorder>xmin3</zorder>
-         <zorder>label_53</zorder>
-         <zorder>ysteps3</zorder>
-         <zorder>label_52</zorder>
-         <zorder>label_58</zorder>
-         <zorder>h3</zorder>
-         <zorder>label_57</zorder>
-         <zorder>label_59</zorder>
-         <zorder>ymax3</zorder>
-         <zorder>ymin3</zorder>
-         <zorder>k3</zorder>
-         <zorder>l3</zorder>
-         <zorder>xmin2</zorder>
-         <zorder>slice3</zorder>
-         <zorder>ymin2</zorder>
-         <zorder>slice2</zorder>
-         <zorder>label_54</zorder>
-         <zorder>label_43</zorder>
-         <zorder>k2</zorder>
-         <zorder>label_42</zorder>
-         <zorder>label_44</zorder>
-         <zorder>thickness2</zorder>
-         <zorder>label_2</zorder>
-         <zorder>label_6</zorder>
-         <zorder>label_11</zorder>
-         <zorder>label_63</zorder>
-         <zorder>label_62</zorder>
-         <zorder>SAFile_ledt</zorder>
-         <zorder>FluxFile_ledt</zorder>
-         <zorder>FluxFile_btn</zorder>
-         <zorder>SAFile_btn</zorder>
-         <zorder>xsteps1</zorder>
         </widget>
        </widget>
       </item>
