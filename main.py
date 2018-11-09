@@ -480,7 +480,6 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
                 self.tr('-3 r'),
                 self.tr('-31m'),
                 self.tr('-3m r'),
-                self.tr('-3m1'),
                 self.tr('3 r'),
                 self.tr('312'),
                 self.tr('31m'),
@@ -707,6 +706,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def toDouble(self, temp):
         # for qt strings
+        if str("%s" % temp)=="-":
+            return 0.
         if temp.contains('.') or temp.contains("e"):
             result = float(temp)
         else:

@@ -1257,7 +1257,7 @@ if centering == "R":
 print('\nLattice Type: {}'.format(lattice_centering))
 
 #
-if str(point_group.getCrystalSystem()) =='Monoclinic':
+if str(point_group.getCrystalSystem()) =='Monoclinic' or str(point_group.getCrystalSystem()) =='Trigonal':
     pg_symbol =str(point_group.getHMSymbol())
 else:
     pg_symbol =str(str(point_group.getHMSymbol()) +' (' +str(point_group.getCrystalSystem())+')')
