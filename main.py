@@ -65,6 +65,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.minIntensity_ledt.textChanged.connect(self.change_minIntensity)
         self.normToWavelength_ledt.textChanged.connect(self.change_normToWavelength)
         self.predictPeaks_chbx.stateChanged.connect(self.predict_peaks)  # When the button is pressed
+        self.live_chbx.stateChanged.connect(self.change_live)  # When the button is pressed
         self.minIsigI_ledt.textChanged.connect(self.change_minIsigI)
         self.scaleFactor_ledt.textChanged.connect(self.change_scaleFactor)
         self.edgePixels_ledt.textChanged.connect(self.change_edgePixels)
@@ -270,6 +271,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.abcMax = str( 12)
         self.tolerance = str( 0.12)
         self.predictPeaks = str( True)
+        self.live = str( False)
         self.pred_minDSpacing = str( 0.499)
         self.pred_maxDSpacing = str( 11.0)
         self.pred_minWavelength = str( 0.4)
@@ -299,7 +301,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ymax1 = ""
         self._ysteps1 = str(400)
         self._slice1 = str(0.0)
-        self._thickness1 = str(0.01)
+        self._thickness1 = str(0.1)
         self._zmin1 = str(-0.005)
         self._zmax1 = str(0.005)
         self._h2 = "H"
@@ -312,7 +314,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ymax2 = ""
         self._ysteps2 = str(400)
         self._slice2 = str(0.0)
-        self._thickness2 = str(0.01)
+        self._thickness2 = str(0.1)
         self._zmin2 = str(-0.005)
         self._zmax2 = str(0.005)
         self._h3 = "K"
@@ -325,7 +327,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self._ymax3 = ""
         self._ysteps3 = str(400)
         self._slice3 = str(0.0)
-        self._thickness3 = str(0.01)
+        self._thickness3 = str(0.1)
         self._zmin3 = str(-0.005)
         self._zmax3 = str(0.005)
         self.SAFile = ""
@@ -715,6 +717,12 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
             result = float(temp_int)
         return result
 
+    def change_live(self, state):
+        if state == QtCore.Qt.Checked:
+            self.live = True
+        else:
+            self.live = False
+
     def predict_peaks(self, state):
         if state == QtCore.Qt.Checked:
             self.predictPeaks = True
@@ -831,8 +839,11 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
             "pg_symbol": pg,
             "z_score": self.z_score,
             "starting_batch_number": self.starting_batch_number
-
         }
+        # if value in dictionary is missing, set to None
+        for key in kw.keys():
+            if not kw[key]:
+                kw[key] = "None"
 
         templatePath = "./template.config"
         self.path = self.expName+".config"
@@ -889,6 +900,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
 
     def auto(self):
+        self.accept()
         baseDir = os.environ['PWD']
         timestr = time.strftime("%Y%m%d-%H%M%S")
         autoConfig = baseDir[:baseDir.find("shared")]+"shared/autoreduce/autoreduce"+timestr+".config"
@@ -900,8 +912,11 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def run(self):
         self.accept()
-        self.proc = Popen(['/usr/bin/python','topaz_reduction.py', str(self.path)])
-        print ("Finished reduction")
+        if self.live:
+            self.proc = Popen(['/usr/bin/python','runMantidEV.py', str(self.path)])
+        else:
+            self.proc = Popen(['/usr/bin/python','topaz_reduction.py', str(self.path)])
+            print ("Finished reduction")
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
