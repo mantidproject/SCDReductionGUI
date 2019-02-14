@@ -344,16 +344,27 @@ niggli_name = output_directory + "/" + exp_name + "_Niggli"
 niggli_integrate_file = niggli_name + ".integrate"
 niggli_matrix_file = niggli_name + ".mat"
 
-first_time = True
 if not use_cylindrical_integration:
+  first_time = True
+  seqNum = 0
+  fout = open(niggli_integrate_file,"w")
   for r_num in run_nums:
     one_run_file = output_directory + '/' + str(r_num) + '_Niggli.integrate'
-    peaks_ws = LoadIsawPeaks( Filename=one_run_file )
-    if first_time:
-      SaveIsawPeaks( InputWorkspace=peaks_ws, AppendFile=False, Filename=niggli_integrate_file )
-      first_time = False
-    else:
-      SaveIsawPeaks( InputWorkspace=peaks_ws, AppendFile=True, Filename=niggli_integrate_file )
+    f = open(one_run_file,"r")
+    lines = f.readlines()
+    f.close()
+    for line in lines:
+      if line[0] =="0" or line[0] == "1" or line[0] == "2":
+        fout.write(line)
+      elif line[0] !="4" and line[0] != "5" and line[0] != "6" and line[0] != "7" and line[0] != "V":
+        strCount = "%6d"%seqNum
+        line = line[:2] + strCount + line[8:]
+        fout.write(line)
+        seqNum = seqNum + 1
+      elif first_time:
+        fout.write(line)
+    first_time = False
+  fout.close()
 
 #
 # Load the combined file and re-index all of the peaks together. 
