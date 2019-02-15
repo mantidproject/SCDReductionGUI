@@ -69,6 +69,8 @@ from mantid.simpleapi import FilterBadPulses,ConvertToMD,LoadIsawUB,PredictPeaks
 from mantid.api import mtd
 
 def write_prenexus(ws, instrument, run, output_directory):
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
     newFile = open(os.path.join(output_directory, instrument+"_"+run+"_neutron_event.dat"), "wb")
     data_dict = defaultdict(list)
     for i in range(ws.getNumberHistograms()):

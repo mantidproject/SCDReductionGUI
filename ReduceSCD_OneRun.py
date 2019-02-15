@@ -162,13 +162,7 @@ minQ ='-%s,-%s,-%s'%(Qmax,Qmax,Qmax)
 if data_directory is not None:
   full_name = data_directory + "/" + instrument_name + "_" + run + ".nxs.h5"
 else:
-  temp_buffer = os.popen("findnexus --event -i "+instrument_name+" "+str(run) )
-  full_name = temp_buffer.readline()
-  full_name=full_name.strip()
-  if not full_name.endswith('nxs'):
-    print "Exiting since the data_directory was not specified and"
-    print "findnexus failed for event NeXus file: " + instrument_name + " " + str(run)
-    exit(0)
+  full_name = instrument_name+"_"+str(run)
 
 print "\nProcessing File: " + full_name + " ......\n"
 
