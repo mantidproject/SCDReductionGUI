@@ -260,7 +260,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.dataDirectory = baseDir[:baseDir.find("shared")]+"nexus"
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
-        self.calFileName = "/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal"
+        self.calFileName = "/SNS/TOPAZ/shared/calibrations/2019A/Calibration/TOPAZ_2019A.DetCal"
         self.subtract_bkg = False
         self.backgroundFileName = "None"
         self.read_UB = False
@@ -282,7 +282,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.peakRadius = str( 0.11)
         self.bkg_inner_radius = str( 0.115)
         self.bkg_outer_radius = str( 0.14)
-        self.spectraFileName='/SNS/TOPAZ/shared/calibrations/2018B/Spectrum_2mmBN_26600_26602.dat'
+        self.spectraFileName='/SNS/TOPAZ/shared/calibrations/2019A/Calibration/Spectrum_32751_32758.dat'
         self.normToWavelength = str(1.0)
         self.scaleFactor = str(0.05)
         self.minIntensity = str( 10)
