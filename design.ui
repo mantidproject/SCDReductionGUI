@@ -1363,7 +1363,7 @@
                    <string>Calibration file</string>
                   </property>
                   <property name="text">
-                   <string>/SNS/TOPAZ/shared/calibrations/2018B/TOPAZ_2018B.DetCal</string>
+                   <string>/SNS/TOPAZ/shared/calibrations/2019A/Calibration/TOPAZ_2019A.DetCal</string>
                   </property>
                  </widget>
                 </item>
@@ -3820,7 +3820,7 @@
                    <string>Name of spectrum file</string>
                   </property>
                   <property name="text">
-                   <string>/SNS/TOPAZ/shared/calibrations/2018B/Spectrum_2mmBN_26600_26602.dat</string>
+                   <string>/SNS/TOPAZ/shared/calibrations/2019A/Calibration/Spectrum_32751_32758.dat</string>
                   </property>
                  </widget>
                 </item>
