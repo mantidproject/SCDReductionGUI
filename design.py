@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(951, 553)
+        MainWindow.resize(951, 586)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -1845,6 +1845,9 @@ class Ui_MainWindow(object):
         self.PushButton_config = QtGui.QPushButton(self.centralwidget)
         self.PushButton_config.setObjectName(_fromUtf8("PushButton_config"))
         self.gridLayout.addWidget(self.PushButton_config, 2, 0, 1, 1)
+        self.PushButton_kill = QtGui.QPushButton(self.centralwidget)
+        self.PushButton_kill.setObjectName(_fromUtf8("PushButton_kill"))
+        self.gridLayout.addWidget(self.PushButton_kill, 5, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 951, 22))
@@ -1870,6 +1873,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        self.PushButton_run.setToolTip(_translate("MainWindow", "Save configuration file and run reduction with that file", None))
         self.PushButton_run.setText(_translate("MainWindow", "Run Reduction with Configuration File", None))
         self.sample.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:9pt; font-style:italic;\">Sample inputs of molecular formulas</span></p><p><span style=\" font-size:9pt;\">For example, for oxalic acid dihydrate, C2O4H2.2H2O, or C2O6H6, input</span></p><p><span style=\" font-size:9pt;\">C2 O4 H2 H4 O2 </span><span style=\" font-size:9pt; font-style:italic;\">or</span><span style=\" font-size:9pt;\"> C2 O6 H6</span></p><p><span style=\" font-size:9pt;\">For deuterated oxalic acid dihydrate, input</span></p><p><span style=\" font-size:9pt;\">C2 O6 D6 </span><span style=\" font-size:9pt; font-style:italic;\">or</span><span style=\" font-size:9pt;\"> C2 O6 2H6</span></p><p><span style=\" font-size:9pt;\">For La2NiO4.2, input</span></p><p><span style=\" font-size:9pt;\">La2 Ni1 O4.2</span></p><p><span style=\" font-size:9pt;\">For boron-11 B4C, input</span></p><p><span style=\" font-size:9pt;\">11B4 C1</span></p><p><span style=\" font-weight:600;\">Descriptions of input</span>:</p><p><span style=\" font-weight:600;\">Molecular formula</span>: The chemical formula input as described above.</p><p><span style=\" font-weight:600;\">Z</span>: The number of formula units in the unit cell.</p><p>This can be a noninteger value.</p><p><span style=\" font-weight:600;\">Unit cell volume</span>: The unit cell volume in units of Angstroms cubed.</p><p><span style=\" font-weight:600;\">weight</span>: Crystal weight in milligrams.</p><p>If 0, do not calculate crystal volume or radius.</p></body></html>", None))
         self.label_50.setText(_translate("MainWindow", "Load Config File", None))
@@ -2201,6 +2205,9 @@ class Ui_MainWindow(object):
         self.ysteps3.setText(_translate("MainWindow", "400", None))
         self.PushButton_auto.setText(_translate("MainWindow", "Copy Configuration File to AutoReduce", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Plotting Input", None))
+        self.PushButton_config.setToolTip(_translate("MainWindow", "Save configuration file to current directory", None))
         self.PushButton_config.setText(_translate("MainWindow", "Write Configuration File", None))
+        self.PushButton_kill.setToolTip(_translate("MainWindow", "Kill script", None))
+        self.PushButton_kill.setText(_translate("MainWindow", "Stop Reduction", None))
         self.menuTOPAZ.setTitle(_translate("MainWindow", "FIle", None))
 

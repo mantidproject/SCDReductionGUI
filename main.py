@@ -4,6 +4,7 @@ from PyQt4 import QtGui, QtCore  # Import the PyQt4 module we'll need
 from shutil import copyfile
 import sys  # We need sys so that we can pass argv to QApplication
 from subprocess import PIPE, Popen
+import signal
 import design  # This file holds our MainWindow and all design related things
 import ReduceDictionary
 import shlex
@@ -77,6 +78,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.PushButton_config.clicked.connect(self.accept)  # When the button is pressed
         self.PushButton_auto.clicked.connect(self.auto)  # When the button is pressed
         self.PushButton_run.clicked.connect(self.run)  # When the button is pressed
+        self.PushButton_kill.clicked.connect(self.reject)  # When the button is pressed
         #plot data
         self.h1.currentIndexChanged.connect(self.change_h1)
         self.k1.currentIndexChanged.connect(self.change_k1)
@@ -785,7 +787,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def reject(self):
         print ("script has been killed")
-        self.proc.kill()
+        os.killpg(os.getpgid(self.proc.pid), signal.SIGTERM)
         
     def accept(self):
         #Generate config file 
@@ -912,11 +914,10 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def run(self):
         self.accept()
-        if self.live:
+        if self.live is True:
             self.proc = Popen(['/usr/bin/python','runMantidEV.py', str(self.path)])
         else:
             self.proc = Popen(['/usr/bin/python','topaz_reduction.py', str(self.path)])
-            print ("Finished reduction")
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication

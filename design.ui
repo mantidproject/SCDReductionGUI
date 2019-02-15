@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>951</width>
-    <height>553</height>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,6 +17,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="4" column="0">
      <widget class="QPushButton" name="PushButton_run">
+      <property name="toolTip">
+       <string>Save configuration file and run reduction with that file</string>
+      </property>
       <property name="text">
        <string>Run Reduction with Configuration File</string>
       </property>
@@ -5996,8 +5999,21 @@
     </item>
     <item row="2" column="0">
      <widget class="QPushButton" name="PushButton_config">
+      <property name="toolTip">
+       <string>Save configuration file to current directory</string>
+      </property>
       <property name="text">
        <string>Write Configuration File</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="PushButton_kill">
+      <property name="toolTip">
+       <string>Kill script</string>
+      </property>
+      <property name="text">
+       <string>Stop Reduction</string>
       </property>
      </widget>
     </item>
