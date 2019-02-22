@@ -915,9 +915,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
     def run(self):
         self.accept()
         if self.live is True:
-            self.proc = Popen(['/usr/bin/python','runMantidEV.py', str(self.path)])
+            self.proc = Popen(['/bin/mantidpythonnightly','runMantidEV.py', str(self.path)])
         else:
-            self.proc = Popen(['/usr/bin/python','topaz_reduction.py', str(self.path)])
+            self.proc = Popen(['/bin/mantidpythonnightly','topaz_reduction.py', str(self.path)])
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication

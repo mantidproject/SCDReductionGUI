@@ -175,7 +175,7 @@ run_niggli_integrate_file = output_directory + "/" + run + "_Niggli.integrate"
 #
 # Load the run data and find the total monitor counts
 #
-event_ws = LoadEventNexus( Filename=full_name, 
+event_ws = Load( Filename=full_name, 
                            FilterByTofMin=min_tof, FilterByTofMax=max_tof)
 
 #
@@ -208,15 +208,18 @@ if (calibration_file_1 is not None ) or (calibration_file_2 is not None):
   LoadIsawDetCal( event_ws, 
                   Filename=calibration_file_1, Filename2=calibration_file_2 )  
 
-monitor_ws = LoadNexusMonitors( Filename=full_name )
-proton_charge = monitor_ws.getRun().getProtonCharge() * 1000.0  # get proton charge
+proton_charge = event_ws.getRun().getProtonCharge() * 1000.0  # get proton charge
 print "\n", run, " has integrated proton charge x 1000 of", proton_charge, "\n"
 
-integrated_monitor_ws = Integration( InputWorkspace=monitor_ws, 
-                                     RangeLower=min_monitor_tof, RangeUpper=max_monitor_tof, 
-                                     StartWorkspaceIndex=monitor_index, EndWorkspaceIndex=monitor_index )
-
-monitor_count = integrated_monitor_ws.dataY(0)[0]
+try:
+  monitor_ws = LoadNexusMonitors( Filename=full_name )
+  integrated_monitor_ws = Integration( InputWorkspace=monitor_ws, 
+                                       RangeLower=min_monitor_tof, RangeUpper=max_monitor_tof, 
+                                       StartWorkspaceIndex=monitor_index, EndWorkspaceIndex=monitor_index )
+  
+  monitor_count = integrated_monitor_ws.dataY(0)[0]
+except:
+  monitor_count = 0
 print "\n", run, " has integrated monitor count", monitor_count, "\n"
 
 # Subtract no-sample background

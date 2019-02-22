@@ -10,7 +10,9 @@ ConfigService.setLogLevel(1)
 instrument = "TOPAZ"
 seconds = 60
 script = "./ReduceSCD_LiveRun.py"
+script0 = "./ReduceSCD_LiveRun0.py"
 StartLiveData(Instrument=instrument, UpdateEvery = seconds, PreserveEvents=True,
+                  ProcessingScriptFilename=script0,
                   AccumulationMethod = "Add", AccumulationWorkspace="tmp",
                   OutputWorkspace="peaks_ws", PostProcessingScriptFilename=script)
 print('Type Ctrl-C to cancel')

@@ -65,29 +65,8 @@ from collections import defaultdict
 
 sys.path.insert(0,"/opt/mantidnightly/bin")
 
-from mantid.simpleapi import FilterBadPulses,ConvertToMD,LoadIsawUB,PredictPeaks,CentroidPeaks,SaveIsawUB,SaveIsawPeaks,IntegratePeaksMD,Rebin,PeakIntegration,IntegrateEllipsoids,CopySample,CropWorkspace,MDNormSCD,BinMD,AddSampleLog,SetGoniometer
+from mantid.simpleapi import ConvertToMD,LoadIsawUB,PredictPeaks,CentroidPeaks,SaveIsawUB,SaveIsawPeaks,IntegratePeaksMD,Rebin,PeakIntegration,IntegrateEllipsoids,CopySample,CropWorkspace,MDNormSCD,BinMD,AddSampleLog,SetGoniometer
 from mantid.api import mtd
-
-def write_prenexus(ws, instrument, run, output_directory):
-    if not os.path.exists(output_directory):
-        os.makedirs(output_directory)
-    newFile = open(os.path.join(output_directory, instrument+"_"+run+"_neutron_event.dat"), "wb")
-    data_dict = defaultdict(list)
-    for i in range(ws.getNumberHistograms()):
-        tofs = ws.getSpectrum(i).getTofs()
-        pid = ws.getDetector(i).getID()
-        for j in range(len(tofs)):
-            data_dict[tofs[j]].append(pid)
-    sorted(data_dict)
-    events = []
-    for tof in data_dict:
-        pids = data_dict.get(tof)
-        for pid in pids:
-            events.append(int(10*tof))
-            events.append(pid)
-    
-    newFile.write(struct.pack('%si' % len(events), *events))
-    newFile.close()
 
 start_time = time.time()
 
@@ -178,7 +157,7 @@ Qmax                       = params_dictionary.get('Qmax', "20")
 maxQ ='%s,%s,%s'%(Qmax,Qmax,Qmax)
 minQ ='-%s,-%s,-%s'%(Qmax,Qmax,Qmax)
 
-write_prenexus(event_ws, instrument_name, run, output_directory)
+SaveNexus(InputWorkspace='event_ws', Filename=os.path.join(output_directory, instrument+"_"+run+".nxs.h5"))
 
 #
 # Name the files to write for this run
@@ -200,10 +179,8 @@ AddSampleLog(Workspace=event_ws, LogName='chi',
 phi = event_ws.getRun()['phi'].value[0]
 #
 SetGoniometer(Workspace='event_ws', Goniometers='Universal')
-print 'TOPAZ_%s \nOmega =%9.4f, Omega_modified = %s \nChi = %9.4f, Chi_modified = %s\nPhi = %9.4f\n'%(run, omega, omega_modified, chi, chi_modified, phi)
+print 'TOPAZ_%s Events =%20d Phi =%9.4f Chi = %9.4f Omega = %9.4f\n'%(run, event_ws.getNumberEvents(), phi, chi_modified, omega_modified)
 
-#
-event_ws = FilterBadPulses(InputWorkspace=event_ws, LowerCutoff = 95)
 #
 # Load calibration file(s) if specified.  NOTE: The file name passed in to LoadIsawDetCal
 # can not be None.  TOPAZ has one calibration file, but SNAP may have two.
@@ -217,7 +194,7 @@ if (calibration_file_1 is not None ) or (calibration_file_2 is not None):
                   Filename=calibration_file_1, Filename2=calibration_file_2 )  
 
 proton_charge = event_ws.getRun().getProtonCharge() * 1000.0  # get proton charge
-print "\n", run, " has integrated proton charge x 1000 of", proton_charge, "\n"
+#print "\n", run, " has integrated proton charge x 1000 of", proton_charge, "\n"
 
 # Subtract no-sample background
 if subtract_bkg is True:
@@ -228,7 +205,6 @@ if subtract_bkg is True:
     bkg = LoadEventNexus( Filename=no_sample_event_nxs_fname,
                       FilterByTofMin=min_tof, FilterByTofMax=max_tof)
     bkg_proton_charge = bkg.getRun().getProtonCharge()* 1000.0 
-    bkg = FilterBadPulses(InputWorkspace=bkg, LowerCutoff = 95)
     #
     LoadIsawDetCal( bkg, 
                 Filename=calibration_file_1, Filename2=calibration_file_2 )  
@@ -288,7 +264,8 @@ try:
     IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=False, Tolerance=tolerance)
   
   print peaks_ws.sample().getOrientedLattice()
-  IndexPeaks( PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+  indexed=IndexPeaks( PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+  print("Number of Indexed Peaks: {:d}".format(indexed[0]))
   
   #
   # Get complete list of peaks to be integrated and load the UB matrix into
@@ -325,7 +302,7 @@ try:
   
   #
   #Delete MD workspace
-  AnalysisDataService.remove( MDEW.getName() )
+  AnalysisDataService.remove( MDEW.name() )
   
   #
   # Save UB and peaks file, so if something goes wrong latter, we can at least 
@@ -610,16 +587,17 @@ try:
                       AxisAligned=True)
   
      
-      fig, ax = plt.subplots()
-      ax.set_title('{}=[{},{}]'.format(AxisNames[plot_param['axis3']],plot_zmin,plot_zmax))
       intensity=mdh.getSignalArray()
       vmin = 1
       vmax = intensity.max()
-      if vmax > 100:
+      if vmax > 1:
+        fig, ax = plt.subplots()
+        ax.set_title('{}=[{},{}]'.format(AxisNames[plot_param['axis3']],plot_zmin,plot_zmax))
         logNorm = colors.LogNorm(vmin = vmin, vmax = vmax)
         cm = plt.cm.get_cmap('rainbow')
         pcm = Plot2DMD(ax,mdh,NumEvNorm=False,norm=logNorm)
         fig.colorbar(pcm,ax=ax)
+        #plotSlice(mdws, xydim=[plot_param['axis1'],plot_param['axis2']], slicepoint=[0,0,0.5*(plot_param['zmin']+plot_param['zmax'])], colorscalelog=True)
         plt.show()
 except Exception as e:
     logger.error("Could not find UB: "+str(e))
