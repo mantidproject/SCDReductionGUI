@@ -157,8 +157,6 @@ Qmax                       = params_dictionary.get('Qmax', "20")
 maxQ ='%s,%s,%s'%(Qmax,Qmax,Qmax)
 minQ ='-%s,-%s,-%s'%(Qmax,Qmax,Qmax)
 
-SaveNexus(InputWorkspace='event_ws', Filename=os.path.join(output_directory, instrument+"_"+run+".nxs.h5"))
-
 #
 # Name the files to write for this run
 #
@@ -180,6 +178,8 @@ phi = event_ws.getRun()['phi'].value[0]
 #
 SetGoniometer(Workspace='event_ws', Goniometers='Universal')
 print 'TOPAZ_%s Events =%20d Phi =%9.4f Chi = %9.4f Omega = %9.4f\n'%(run, event_ws.getNumberEvents(), phi, chi_modified, omega_modified)
+
+SaveNexus(InputWorkspace='event_ws', Filename=os.path.join(output_directory, instrument+"_"+run+".nxs.h5"))
 
 #
 # Load calibration file(s) if specified.  NOTE: The file name passed in to LoadIsawDetCal

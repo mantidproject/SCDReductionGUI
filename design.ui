@@ -2619,7 +2619,7 @@
                   <string>Shorter than shortest cell edge in the Niggli reduced cell</string>
                  </property>
                  <property name="text">
-                  <string>5</string>
+                  <string>3</string>
                  </property>
                 </widget>
                </item>
@@ -2655,7 +2655,7 @@
                   <string>Larger than largest cell edge in the Niggli reduced cell</string>
                  </property>
                  <property name="text">
-                  <string>12</string>
+                  <string>18</string>
                  </property>
                 </widget>
                </item>
