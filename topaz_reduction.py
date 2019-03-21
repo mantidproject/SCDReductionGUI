@@ -1190,7 +1190,7 @@ while True:
                 + '\n' )
             
             hklFile.write( 3*'%4d' % (h,k,l)
-                + 2*'%8.0f' % (fsq, sigfsq) 
+                + 2*'%8.2f' % (fsq, sigfsq) 
                 + '%4d' % hstnum 
                 + 2*'%8.5f' % (wl, tbar)
                 + 6*'%9.5f' % (dir_cos_1[0], dir_cos_2[0], dir_cos_1[1], dir_cos_2[1], dir_cos_1[2], dir_cos_2[2])
@@ -1212,7 +1212,7 @@ while True:
             tbar = 0.0
             transmission = 1.0
             hklFile.write( 3*'%4d' % (h, k, l)
-                + 2*'%8.0f' % (fsq, sigfsq)
+                + 2*'%8.2f' % (fsq, sigfsq)
                 + '%4d' % hstnum 
                 + 2*'%8.5f' % (wl, tbar)
                 + 6*'%9.5f' % (dir_cos_1[0], dir_cos_2[0], dir_cos_1[1], dir_cos_2[1], dir_cos_1[2], dir_cos_2[2])
@@ -1252,7 +1252,7 @@ if fsqmax > (10000000.00 -1):
 iz = 0
 rz = 0.0
 hklFile.write( 3*'%4d' % (iz, iz, iz)
-    + 2*'%8.0f' % (rz, rz)
+    + 2*'%8.2f' % (rz, rz)
     + '%4d' % iz 
     + 2*'%8.5f' % (rz, rz)
     + 6*'%9.5f' % (rz, rz, rz, rz, rz, rz)
@@ -1351,7 +1351,7 @@ if iIQ == 1 or iIQ == 3:
             iHKL[5] = nDet                
             # output reflection sorted by detector number to hkl file                
             hkl_output.write( 3*'%4d' % (iHKL[0],iHKL[1],iHKL[2])
-                + 2*'%8.0f' % (iHKL[3],iHKL[4])
+                + 2*'%8.2f' % (iHKL[3],iHKL[4])
                 + '%4d' % iHKL[5] 
                 + 2*'%8.5f' % (iHKL[6], iHKL[7])
                 + 6*'%9.5f' % (iHKL[8],iHKL[9],iHKL[10],iHKL[11],iHKL[12],iHKL[13])
@@ -1363,7 +1363,7 @@ if iIQ == 1 or iIQ == 3:
                                 
     # last record all zeros for shelx
     hkl_output.write( 3*'%4d' % (iz, iz, iz)
-        + 2*'%8.0f' % (rz, rz)
+        + 2*'%8.2f' % (rz, rz)
         + '%4d' % iz 
         + 2*'%8.5f' % (rz, rz)
         + 6*'%9.5f' % (rz, rz, rz, rz, rz, rz)
@@ -1389,43 +1389,48 @@ topi_f=open(jana_fname,'w')
 #
 #Q_sample in IPNS coordinates system, x-along neutron beam; y-perpendicular to neutron beam; z-up
 to_IPNS=np.array([[0,0,1],[1,0,0],[0,1,0]])
+#
 hkllists.sort(key=itemgetter(15))  # sort peaks by sequence number
 
-for i in range(len(hkllists)):
-    #
-    #Use IPNS coordinates
-    Q_sample =np.array([hkllists[i][22],hkllists[i][23],hkllists[i][24]])
-    Q_sample=np.dot(to_IPNS,Q_sample)
-    #
-    #Use normalized intensity and sigma after anvred correction
-    #Use normalized intensity and sigma after anvred correction
-    intensity=hkllists[i][3]
-    error=hkllists[i][4]
-    wl=hkllists[i][6]
-    hstnum=hkllists[i][5]
-    topi_f.write(2*'%9.2f' % (intensity,error)
-               + 3*'%13.8f' % (Q_sample[0],Q_sample[1],Q_sample[2])
-               + '%8.5f' % (wl) + '%4d' % (hstnum) + '\n')
+#Output JANA topi file with batch number sorted by runs 
+nBatch = 0
+for iBatch, iGroup in groupby(hkllists, itemgetter(14)):                
+    nBatch = nBatch + 1
+    for runHKL in iGroup:
+        runHKL[5] = nBatch               
+        #Use IPNS coordinates
+        Q_sample =np.array([runHKL[22],runHKL[23],runHKL[24]])
+        Q_sample=np.dot(to_IPNS,Q_sample)
+        #
+        #Use normalized intensity and sigma after anvred correction
+        #Use normalized intensity and sigma after anvred correction
+        intensity=runHKL[3]
+        error=runHKL[4]
+        wl=runHKL[6]
+        hstnum=runHKL[5]
+        topi_f.write(2*'%9.2f' % (intensity,error)
+                   + 3*'%13.8f' % (Q_sample[0],Q_sample[1],Q_sample[2])
+                   + '%8.5f' % (wl) + '%4d' % (hstnum) + '\n')
 topi_f.close()
 #
 # Peak statistics
 
 #Remove peaks from anvred
 #Replace peak intensity and sigma with normalized fsqr and sigma_fsqr from anvred
-peaks_outliers=[]
 for i in range(peaks_ws.getNumberPeaks()):
     pk=peaks_ws.getPeak(i)
     pki=pk.getPeakNumber()
     anvred_index=np.where(np.array(peak_num_anvred)==pki)[0].astype(np.int)
     if len(anvred_index) == 0:
-        peaks_outliers.append(i)
+        pk.setIntensity(0)
+        pk.setSigmaIntensity(0)
         continue
     else:
         pk.setIntensity(hkllists[anvred_index][3])
         pk.setSigmaIntensity(hkllists[anvred_index][4])
         #print(hkl, pki, index,pk.getIntensity(), pk.getSigmaIntensity())
 
-DeleteTableRows(TableWorkspace=peaks_ws,Rows=peaks_outliers)
+peaks_ws = FilterPeaks(InputWorkspace = peaks_ws,  FilterVariable = 'Intensity',  FilterValue = 0,  Operator = '!=')
 #
 print ('\nNumber of Peaks from anvred correction : {0}'.format(peaks_ws.getNumberPeaks()))
 
@@ -1470,7 +1475,7 @@ statistics = statistics_table.row(0)
 
 print '\nCrystal symmetry'
 print('               Point Group: {}'.format(point_group.getHMSymbol()))
-print ('           Lattice System: {}'.format(point_group.getCrystalSystem()))
+print ('          Lattice Sysstem: {}'.format(point_group.getCrystalSystem()))
 print ('        Lattice Centering: {}'.format(lattice_centering))
 print '\nPeak Statistics'
 print ('          Number of Peaks: {0}'.format(sorted.getNumberPeaks()))
@@ -1540,7 +1545,7 @@ if iIQ == 1 or iIQ == 3:
             iHKL[5] = nBatch               
             # output reflection sorted by run number to hkl file                
             hkl_output2.write( 3*'%4d' % (iHKL[0],iHKL[1],iHKL[2])
-                + 2*'%8.0f' % (iHKL[3],iHKL[4])
+                + 2*'%8.2f' % (iHKL[3],iHKL[4])
                 + '%4d' % iHKL[5] 
                 + 2*'%8.5f' % (iHKL[6], iHKL[7])
                 + 6*'%9.5f' % (iHKL[8],iHKL[9],iHKL[10],iHKL[11],iHKL[12],iHKL[13])
@@ -1552,7 +1557,7 @@ if iIQ == 1 or iIQ == 3:
                                 
     # last record all zeros for shelx
     hkl_output2.write( 3*'%4d' % (iz, iz, iz)
-        + 2*'%8.0f' % (rz, rz)
+        + 2*'%8.2f' % (rz, rz)
         + '%4d' % iz 
         + 2*'%8.5f' % (rz, rz)
         + 6*'%9.5f' % (rz, rz, rz, rz, rz, rz)
@@ -1580,7 +1585,7 @@ if iIQ == 1 or iIQ == 3:
             iHKL[5] = nBatch               
             # output reflection sorted by detector number to hkl file                
             hkl_output2.write( 3*'%4d' % (iHKL[0],iHKL[1],iHKL[2])
-                + 2*'%8.0f' % (iHKL[3],iHKL[4])
+                + 2*'%8.2f' % (iHKL[3],iHKL[4])
                 + '%4d' % iHKL[5] 
                 + 2*'%8.5f' % (iHKL[6], iHKL[7])
                 + 6*'%9.5f' % (iHKL[8],iHKL[9],iHKL[10],iHKL[11],iHKL[12],iHKL[13])
@@ -1592,7 +1597,7 @@ if iIQ == 1 or iIQ == 3:
                                 
     # last record all zeros for shelx
     hkl_output2.write( 3*'%4d' % (iz, iz, iz)
-        + 2*'%8.0f' % (rz, rz)
+        + 2*'%8.2f' % (rz, rz)
         + '%4d' % iz 
         + 2*'%8.5f' % (rz, rz)
         + 6*'%9.5f' % (rz, rz, rz, rz, rz, rz)
@@ -1603,6 +1608,7 @@ if iIQ == 1 or iIQ == 3:
         + '\n' )
 
 hkl_output2.close()
+
 
 print "\n**************************************************************************************"
 print   "****************************** All DONE **********************************************"
