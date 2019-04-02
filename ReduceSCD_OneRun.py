@@ -59,7 +59,8 @@ import sys
 import shutil
 import time
 import ReduceDictionary
-sys.path.insert(0,"/opt/mantidnightly/bin")
+#sys.path.insert(0,"/opt/mantidnightly/bin")
+sys.path.insert(0,"/SNS/users/vel/mantid/release/bin")
 
 from mantid.simpleapi import *
 from mantid.api import *
@@ -256,16 +257,16 @@ MDEW = ConvertToMD( InputWorkspace=event_ws, QDimensions="Q3D",
 # need the weighted MD event workspace, so delete it.
 #
 distance_threshold = 0.9 * 6.28 / float(max_d)
-peaks_ws = FindPeaksMD( MDEW, MaxPeaks=num_peaks_to_find,DensityThresholdFactor='5', 
+peaks0_ws = FindPeaksMD( MDEW, MaxPeaks=50,DensityThresholdFactor='5', 
                         PeakDistanceThreshold=distance_threshold )
 
 #Remove peaks on detector edge
 peaks_on_edge=[]
-for i in range(peaks_ws.getNumberPeaks()):
-  pi=peaks_ws.getPeak(i)
+for i in range(peaks0_ws.getNumberPeaks()):
+  pi=peaks0_ws.getPeak(i)
   if pi.getRow()<16 or pi.getRow()>240 or pi.getCol()<16 or pi.getCol()>240:
       peaks_on_edge.append(i)
-DeleteTableRows(TableWorkspace=peaks_ws,Rows=peaks_on_edge)
+DeleteTableRows(TableWorkspace=peaks0_ws,Rows=peaks_on_edge)
 #
 # Read or find UB for the run
 # Read or find UB for the run
@@ -274,22 +275,25 @@ if read_UB:
   ubpath=os.path.dirname(UB_filename)
   ubrunnum = run
   if os.path.exists(ubpath +'%s_Niggli.mat'%(run)):
-    LoadIsawUB(InputWorkspace=peaks_ws, Filename=ubpath +'%s_Niggli.mat'%(run))
+    LoadIsawUB(InputWorkspace=peaks0_ws, Filename=ubpath +'%s_Niggli.mat'%(run))
     print 'Use UB: ', ubpath +'%s_Niggli.mat'%(run)
-    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
-    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
+    IndexPeaks( PeaksWorkspace=peaks0_ws, CommonUBForAll=True, Tolerance=tolerance)
+    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks0_ws, Tolerance=tolerance)
 
   else:
-    LoadIsawUB( InputWorkspace=peaks_ws, Filename=UB_filename)
-    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=False, Tolerance=tolerance)
-    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks_ws, Tolerance=tolerance)
-    IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
+    LoadIsawUB( InputWorkspace=peaks0_ws, Filename=UB_filename)
+    IndexPeaks( PeaksWorkspace=peaks0_ws, CommonUBForAll=False, Tolerance=tolerance)
+    FindUBUsingIndexedPeaks(PeaksWorkspace=peaks0_ws, Tolerance=tolerance)
+    IndexPeaks( PeaksWorkspace=peaks0_ws, CommonUBForAll=True, Tolerance=tolerance)
 
 else:
   # Find a Niggli UB matrix that indexes the peaks in this run
-  FindUBUsingFFT( PeaksWorkspace=peaks_ws, MinD=min_d, MaxD=max_d, Tolerance=tolerance )
-  IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=False, Tolerance=tolerance)
+  FindUBUsingFFT( PeaksWorkspace=peaks0_ws, MinD=min_d, MaxD=max_d, Tolerance=tolerance )
+  IndexPeaks( PeaksWorkspace=peaks0_ws, CommonUBForAll=False, Tolerance=tolerance)
   
+peaks_ws = FindPeaksMD( MDEW, MaxPeaks=num_peaks_to_find,DensityThresholdFactor='5', 
+                        PeakDistanceThreshold=distance_threshold )
+CopySample(InputWorkspace = peaks0_ws,OutputWorkspace = peaks_ws,CopyName = '0',CopyMaterial = '0',CopyEnvironment = '0',CopyShape = '0')
 IndexPeaks( PeaksWorkspace=peaks_ws, Tolerance=tolerance)
 IndexPeaks( PeaksWorkspace=peaks_ws, CommonUBForAll=True, Tolerance=tolerance)
 #

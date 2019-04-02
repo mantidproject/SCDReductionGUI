@@ -66,6 +66,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.minIntensity_ledt.textChanged.connect(self.change_minIntensity)
         self.normToWavelength_ledt.textChanged.connect(self.change_normToWavelength)
         self.predictPeaks_chbx.stateChanged.connect(self.predict_peaks)  # When the button is pressed
+        self.modStruct_chbx.stateChanged.connect(self.plot_modStruct)  # When the button is pressed
         self.live_chbx.stateChanged.connect(self.change_live)  # When the button is pressed
         self.minIsigI_ledt.textChanged.connect(self.change_minIsigI)
         self.scaleFactor_ledt.textChanged.connect(self.change_scaleFactor)
@@ -261,9 +262,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.dataDirectory_ledt.setText(self.dataDirectory)
         self.expName = ""
         self.calFileName = "/SNS/TOPAZ/shared/calibrations/2019A/Calibration/TOPAZ_2019A.DetCal"
-        self.subtract_bkg = False
+        self.subtract_bkg = str( False)
         self.backgroundFileName = "None"
-        self.read_UB = False
+        self.read_UB = str( False)
         self.UBFileName = "None"
         self.maxQ = str(17.0)
         self.splitThreshold = str(80)
@@ -272,13 +273,13 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.abcMin = str( 3)
         self.abcMax = str( 18)
         self.tolerance = str( 0.12)
-        self.predictPeaks = str( True)
-        self.live = str( False)
+        self.predictPeaks =  str( True)
+        self.live =  str( False)
         self.pred_minDSpacing = str( 0.499)
         self.pred_maxDSpacing = str( 11.0)
         self.pred_minWavelength = str( 0.4)
         self.pred_maxWavelength = str( 3.45)
-        self.ellipse_size_specified = str( True)
+        self.ellipse_size_specified =  str( True)
         self.peakRadius = str( 0.11)
         self.bkg_inner_radius = str( 0.115)
         self.bkg_outer_radius = str( 0.14)
@@ -293,6 +294,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.maxWavelength = str( 3.5)
         self.z_score = str( 4.0)
         self.starting_batch_number = str( 1)
+        self.modStruct = str( False)
         self._h1 = "H"
         self._k1 = "K"
         self._l1 = "L"
@@ -725,15 +727,21 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         else:
             self.live = False
 
+    def plot_modStruct(self, state):
+        if state == QtCore.Qt.Checked:
+            self.modStruct = True
+        else:
+            self.modStruct = False
+
     def predict_peaks(self, state):
         if state == QtCore.Qt.Checked:
-            self.predictPeaks = True
+            self.predictPeaks = str( True)
             self.pred_minDSpacing_ledt.setEnabled(True)
             self.pred_maxDSpacing_ledt.setEnabled(True)
             self.pred_minWavelength_ledt.setEnabled(True)
             self.pred_maxWavelength_ledt.setEnabled(True)
         else:
-            self.predictPeaks = False
+            self.predictPeaks = str( False)
             self.pred_minDSpacing_ledt.setDisabled(True)
             self.pred_maxDSpacing_ledt.setDisabled(True)
             self.pred_minWavelength_ledt.setDisabled(True)
@@ -741,9 +749,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
 
     def ellipse_size(self, state):
         if state == QtCore.Qt.Checked:
-            self.ellipse_size_specified = True
+            self.ellipse_size_specified = str( True)
         else:
-            self.ellipse_size_specified = False
+            self.ellipse_size_specified = str( False)
 
     def change_numPeaks(self):
         temp = self.numberPeaks_ledt.text()
@@ -918,6 +926,9 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
             self.proc = Popen(['/bin/mantidpythonnightly','runMantidEV.py', str(self.path)])
         else:
             self.proc = Popen(['/bin/mantidpythonnightly','topaz_reduction.py', str(self.path)])
+            if self.modStruct:
+                self.proc.wait()
+                Popen(['/bin/mantidpythonnightly','ModulatedStructurePlot.py', str(self.path)])
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
