@@ -60,7 +60,7 @@ import shutil
 import time
 import ReduceDictionary
 #sys.path.insert(0,"/opt/mantidnightly/bin")
-sys.path.insert(0,"/SNS/users/vel/mantid/release/bin")
+sys.path.insert(0,"/opt/mantidnightly/release/bin")
 
 from mantid.simpleapi import *
 from mantid.api import *

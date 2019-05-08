@@ -1,10 +1,11 @@
 from __future__ import print_function
 import sys
-sys.path.insert(0,"/SNS/users/vel/mantid/release/bin")
+sys.path.insert(0,"/opt/mantidnightly/release/bin")
 from mantid.simpleapi import *
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.ticker import LogFormatter
+import matplotlib.gridspec as gridspec
 from mpl_toolkits.mplot3d import proj3d
 import numpy as np
 import math
@@ -69,7 +70,7 @@ class SatellitePlot():
                         IsigI = 0.0
                     #if IsigI < 50:
                         #continue
-                    intensity = max(self.minIntensity,peak.getIntensity())
+                    intensity = max(self.minIntensity, peak.getIntensity())
                     for i in range(-1,1):
                         for j in range(-1,1):
                             for k in range(-1,1):
@@ -79,16 +80,52 @@ class SatellitePlot():
                                     self.z.append(hklp[2]+k)
                                     self.c.append(intensity)
                                     self.s.append(5)
-            figP = plt.figure("Peaks",figsize = (self.screen_x, self.screen_y))
-            self.axP = figP.gca(projection = '3d')
+            x_grid = np.linspace(-1, 1, 100)
+            sumIntensityX = np.zeros(len(x_grid))
+            for i in range(len(self.x)):
+                for j in range(len(x_grid)):
+                  if self.x[i] > x_grid[j] and self.x[i] < x_grid[j+1]:
+                      sumIntensityX[j] = sumIntensityX[j] + self.c[i]
+            sumIntensityY = np.zeros(len(x_grid))
+            for i in range(len(self.y)):
+                for j in range(len(x_grid)):
+                  if self.y[i] > x_grid[j] and self.y[i] < x_grid[j+1]:
+                      sumIntensityY[j] = sumIntensityY[j] + self.c[i]
+            sumIntensityZ = np.zeros(len(x_grid))
+            for i in range(len(self.z)):
+                for j in range(len(x_grid)):
+                  if self.z[i] > x_grid[j] and self.z[i] < x_grid[j+1]:
+                      sumIntensityZ[j] = sumIntensityZ[j] + self.c[i]
+            # Plot figure with subplots of different sizes
+            fig = plt.figure("Modulated Structures",figsize = (self.screen_x, self.screen_y))
+            # set up subplot grid
+            gridspec.GridSpec(3,3)
+            ax = plt.subplot2grid((3,3), (0,2))
+            plt.plot(x_grid,sumIntensityX)
+            ax.set_yscale('log')
+            ax.set_xlabel('H')
+            ax.set_ylabel(r'$\Sigma$I')
+            ax = plt.subplot2grid((3,3), (1,2))
+            plt.plot(x_grid,sumIntensityY)
+            ax.set_yscale('log')
+            ax.set_xlabel('K')
+            ax.set_ylabel(r'$\Sigma$I')
+            ax = plt.subplot2grid((3,3), (2,2))
+            plt.plot(x_grid,sumIntensityZ)
+            ax.set_yscale('log')
+            ax.set_xlabel('L')
+            ax.set_ylabel(r'$\Sigma$I')
           
             vmin = min(self.c)
             vmax = max(self.c)
             logNorm = colors.LogNorm(vmin = vmin, vmax = vmax)
+            self.axP = plt.subplot2grid((3,3), (0,0), colspan=2, rowspan=3, projection='3d')
             sp = self.axP.scatter(self.x, self.y, self.z, c = self.c, vmin = vmin, vmax = vmax, norm = logNorm, s = self.s, cmap='rainbow', picker = True, alpha=0.2)
+               
+
             self.props = dict(boxstyle = 'round', facecolor = 'wheat', alpha = 1.0)
 
-            cid = figP.canvas.mpl_connect('pick_event', self.onpick3)
+            cid = fig.canvas.mpl_connect('pick_event', self.onpick3)
 
             try:
                 lattice = self.peaks_ws.sample().getOrientedLattice()
@@ -98,7 +135,7 @@ class SatellitePlot():
             bstar = V3D(0,0.5,0)
             cstar = V3D(0,0,0.5)
             hkls = np.array([np.array([x, y, z]) for x,y,z in zip(self.x,self.y,self.z)])
-            labels, centroids = self.dbscan(hkls, eps=.05, min_points=20)
+            labels, centroids = self.dbscan(hkls, eps=.0425, min_points=6)
             
             i = 0
             modTest = str(self.peaks_ws.getPeak(0).getRunNumber())
@@ -131,8 +168,6 @@ class SatellitePlot():
             self.axP.set_zlabel('L')
     
     
-            formatter = LogFormatter(10, labelOnlyBase = False)
-            plt.colorbar(sp,ticks = [1,10,100,1000,10000,100000,1000000,10000000,100000000], format = formatter)
             # Create cubic bounding box to simulate equal aspect ratio
             max_range = max([max(self.x)-min(self.x), max(self.y)-min(self.y), max(self.z)-min(self.z)])
             Xb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][0].flatten() + 0.5*(max(self.x)+min(self.x))
@@ -141,15 +176,15 @@ class SatellitePlot():
             # Comment or uncomment following both lines to test the fake bounding box:
             for xb, yb, zb in zip(Xb, Yb, Zb):
                self.axP.plot([xb], [yb], [zb], 'w')
-            self.axP.view_init(elev=0, azim=0)
-            plt.show(block=False)
-            plt.pause(10)
+#            self.axP.view_init(elev=0, azim=0)
+#            plt.show(block=False)
+#            plt.pause(10)
             self.axP.view_init(elev=0, azim=-90)
-            plt.show(block=False)
-            plt.pause(10)
-            self.axP.view_init(elev=90, azim=-90)
+#            plt.show(block=False)
+#            plt.pause(10)
+#            self.axP.view_init(elev=90, azim=-90)
             plt.show()
-            figP.canvas.mpl_disconnect(cid)
+            fig.canvas.mpl_disconnect(cid)
 
     def dbscan(self, points, eps=1.0, min_points=5):
         """DBSCAN Clustering algorithm
@@ -221,7 +256,9 @@ class SatellitePlot():
 if __name__ == '__main__':  # if we're running file directly and not importing it
     print ("Wait for peaks in HKL")
     test = SatellitePlot()  # run the main function
-    test.load_peaks( "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.integrate", "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.mat")
+#    test.load_peaks( "/SNS/users/vel/shared/MOD/MOD_Triclinic_P.integrate","/SNS/users/vel/shared/MOD/MOD_Triclinic_P.mat")
+    test.load_peaks( "/SNS/users/vel/shared/MOD/24281_Niggli.integrate","/SNS/users/vel/shared/MOD/24281_Niggli.mat")
+#    test.load_peaks( "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.integrate", "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.mat")
 #    test.load_peaks('/SNS/TOPAZ/IPTS-10003/shared/integration/8071_P.integrate',"/SNS/TOPAZ/IPTS-10003/shared/integration/8071_P.mat")
 #    test.load_peaks('/SNS/TOPAZ/IPTS-18749/shared/7147A_load_peaks/24281_Niggli.integrate',"/SNS/TOPAZ/IPTS-18749/shared/7147A_load_peaks/24281_Niggli.mat")
     test.plot_Qpeaks()
