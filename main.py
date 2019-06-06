@@ -368,8 +368,8 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.runNums = self.runNums.replace(" ", "")
         self.runNums = self.runNums.replace("'", "")
         self.runNums_ledt.setText(self.runNums)
-        #self.dataDirectory=str(params_dictionary[ "data_directory" ])
-        #self.dataDirectory_ledt.setText(self.dataDirectory)
+        self.dataDirectory=str(params_dictionary[ "data_directory" ])
+        self.dataDirectory_ledt.setText(self.dataDirectory)
         #Do not copy experiment name so you will not overwrite previous data
         #self.expName = str(params_dictionary[ "exp_name" ])
         self.expName_ledt.setText(self.expName)
@@ -800,7 +800,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
     def accept(self):
         #Generate config file 
         baseDir = os.environ['PWD']
-        outDir = baseDir[:baseDir.find("shared")]+"shared/"+self.expName + "/"
+        outDir = baseDir[:baseDir.find("shared")]+"shared/"+self.expName
         print ("Working directory: ",outDir)
         pg = self.pointGroup
         print ("Point group: ",pg)
