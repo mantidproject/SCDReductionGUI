@@ -1,6 +1,6 @@
 from __future__ import print_function
 import sys
-sys.path.insert(0,"/opt/mantidnightly/release/bin")
+sys.path.insert(0,"/SNS/users/vel/mantid/release/bin")
 from mantid.simpleapi import *
 import matplotlib.pyplot as plt
 from matplotlib import colors
@@ -74,26 +74,30 @@ class SatellitePlot():
                     for i in range(-1,1):
                         for j in range(-1,1):
                             for k in range(-1,1):
-                                if (abs(hklp[0]+i) < 0.85 and abs(hklp[1]+j) < 0.85 and abs(hklp[2]+k) < 0.85):
+                                if (abs(hklp[0]+i) < 1.0 and abs(hklp[1]+j) < 1.0 and abs(hklp[2]+k) < 1.0):
                                     self.x.append(hklp[0]+i)
                                     self.y.append(hklp[1]+j)
                                     self.z.append(hklp[2]+k)
                                     self.c.append(intensity)
                                     self.s.append(5)
-            x_grid = np.linspace(-1, 1, 100)
-            sumIntensityX = np.zeros(len(x_grid))
+            nPts = 100
+            x_grid = np.linspace(-1, 1, nPts+1)
+            x_half = np.zeros(nPts)
+            for j in range(nPts):
+                x_half[j] = 0.5*(x_grid[j]+x_grid[j+1])
+            sumIntensityX = np.zeros(nPts)
             for i in range(len(self.x)):
-                for j in range(len(x_grid)):
+                for j in range(nPts):
                   if self.x[i] > x_grid[j] and self.x[i] < x_grid[j+1]:
                       sumIntensityX[j] = sumIntensityX[j] + self.c[i]
-            sumIntensityY = np.zeros(len(x_grid))
+            sumIntensityY = np.zeros(nPts)
             for i in range(len(self.y)):
-                for j in range(len(x_grid)):
+                for j in range(nPts):
                   if self.y[i] > x_grid[j] and self.y[i] < x_grid[j+1]:
                       sumIntensityY[j] = sumIntensityY[j] + self.c[i]
-            sumIntensityZ = np.zeros(len(x_grid))
+            sumIntensityZ = np.zeros(nPts)
             for i in range(len(self.z)):
-                for j in range(len(x_grid)):
+                for j in range(nPts):
                   if self.z[i] > x_grid[j] and self.z[i] < x_grid[j+1]:
                       sumIntensityZ[j] = sumIntensityZ[j] + self.c[i]
             # Plot figure with subplots of different sizes
@@ -101,17 +105,41 @@ class SatellitePlot():
             # set up subplot grid
             gridspec.GridSpec(3,3)
             ax = plt.subplot2grid((3,3), (0,2))
-            plt.plot(x_grid,sumIntensityX)
+            plt.plot(x_half,sumIntensityX)
+            maxGrid = "max\n"
+            for i in range(2,nPts-2):
+                if abs(x_half[i]) > 0.55 or abs(x_half[i]) < 0.05:
+                    continue
+                if sumIntensityX[i] > sumIntensityX[i-1] and sumIntensityX[i] > sumIntensityX[i+1] and sumIntensityX[i-1] > sumIntensityX[i-2] and sumIntensityX[i+1] > sumIntensityX[i+2]:
+                    maxGrid += "{:f}\n".format(x_half[i])
+            ax.text(0.05, 0.60, maxGrid,
+                fontsize = 10, transform = ax.transAxes)
             ax.set_yscale('log')
             ax.set_xlabel('H')
             ax.set_ylabel(r'$\Sigma$I')
             ax = plt.subplot2grid((3,3), (1,2))
-            plt.plot(x_grid,sumIntensityY)
+            plt.plot(x_half,sumIntensityY)
+            maxGrid = "max\n"
+            for i in range(2,nPts-2):
+                if abs(x_half[i]) > 0.5 or abs(x_half[i]) < 0.05:
+                    continue
+                if sumIntensityY[i] > sumIntensityY[i-1] and sumIntensityY[i] > sumIntensityY[i+1] and sumIntensityY[i-1] > sumIntensityY[i-2] and sumIntensityY[i+1] > sumIntensityY[i+2]:
+                    maxGrid += "{:f}\n".format(x_half[i])
+            ax.text(0.05, 0.60, maxGrid,
+                fontsize = 10, transform = ax.transAxes)
             ax.set_yscale('log')
             ax.set_xlabel('K')
             ax.set_ylabel(r'$\Sigma$I')
             ax = plt.subplot2grid((3,3), (2,2))
-            plt.plot(x_grid,sumIntensityZ)
+            plt.plot(x_half,sumIntensityZ)
+            maxGrid = "max\n"
+            for i in range(2,nPts-2):
+                if abs(x_half[i]) > 0.5 or abs(x_half[i]) < 0.05:
+                    continue
+                if sumIntensityZ[i] > sumIntensityZ[i-1] and sumIntensityZ[i] > sumIntensityZ[i+1] and sumIntensityZ[i-1] > sumIntensityZ[i-2] and sumIntensityZ[i+1] > sumIntensityZ[i+2]:
+                    maxGrid += "{:f}\n".format(x_half[i])
+            ax.text(0.05, 0.60, maxGrid,
+                fontsize = 10, transform = ax.transAxes)
             ax.set_yscale('log')
             ax.set_xlabel('L')
             ax.set_ylabel(r'$\Sigma$I')
@@ -125,7 +153,9 @@ class SatellitePlot():
 
             self.props = dict(boxstyle = 'round', facecolor = 'wheat', alpha = 1.0)
 
-            cid = fig.canvas.mpl_connect('pick_event', self.onpick3)
+
+            #cid = fig.canvas.mpl_connect('pick_event', self.onpick3)
+            pid = fig.canvas.mpl_connect('key_press_event', self.onpress)
 
             try:
                 lattice = self.peaks_ws.sample().getOrientedLattice()
@@ -142,9 +172,10 @@ class SatellitePlot():
             lastRun = str(self.peaks_ws.getPeak(npeaksTotal-1).getRunNumber())
             if lastRun != modTest:
                 modTest = modTest + "-" +lastRun
+            modTest = modTest + " Type a, b, or c for axis alignment"
             for x in centroids:
                 self.axP.plot([x[0]], [x[1]], [x[2]], 'wo', ms=40, markerfacecolor="None", markeredgecolor='red', markeredgewidth=3)
-                if x[0]*x[0]+x[1]*x[1]+x[2]*x[2] > 0.01 and x[0]>=-0.1 and x[1]>=-0.1 and x[2]>=-0.1:
+                if x[0]*x[0]+x[1]*x[1]+x[2]*x[2] > 0.01 and x[0]>=-0.5 and x[1]>=-0.5 and x[2]>=-0.5 and x[0] <=0.5 and x[1] <= 0.5 and x[2] <=0.5:
                     modTest += "\nModulation Vector = "+"{:.3f}".format(x[0]) + ", " + "{:.3f}".format(x[1]) +", " + "{:.3f}".format(x[2])
                     if len(self.mod) == 0:
                         self.mod = "{:.3f}".format(x[0]) + "," + "{:.3f}".format(x[1]) +"," + "{:.3f}".format(x[2])
@@ -162,7 +193,7 @@ class SatellitePlot():
                 "{:.3f}".format(lattice.alpha()) + " " + "{:.3f}".format(lattice.beta()) + " " + "{:.3f}".format(lattice.gamma()) +
                 "\nError = " + " " + "{:.3E}".format(lattice.errora()) + " " + "{:.3E}".format(lattice.errorb()) + " " + "{:.3E}".format(lattice.errorc()) + " " +
                 "{:.3E}".format(lattice.erroralpha()) + " " + "{:.3E}".format(lattice.errorbeta()) + " " + "{:.3E}".format(lattice.errorgamma()) ,
-                fontsize = 20, transform = self.axP.transAxes)
+                fontsize = 10, transform = self.axP.transAxes)
             self.axP.set_xlabel('H')
             self.axP.set_ylabel('K')
             self.axP.set_zlabel('L')
@@ -176,15 +207,9 @@ class SatellitePlot():
             # Comment or uncomment following both lines to test the fake bounding box:
             for xb, yb, zb in zip(Xb, Yb, Zb):
                self.axP.plot([xb], [yb], [zb], 'w')
-#            self.axP.view_init(elev=0, azim=0)
-#            plt.show(block=False)
-#            plt.pause(10)
-            self.axP.view_init(elev=0, azim=-90)
-#            plt.show(block=False)
-#            plt.pause(10)
-#            self.axP.view_init(elev=90, azim=-90)
             plt.show()
-            fig.canvas.mpl_disconnect(cid)
+            #fig.canvas.mpl_disconnect(cid)
+            fig.canvas.mpl_disconnect(pid)
 
     def dbscan(self, points, eps=1.0, min_points=5):
         """DBSCAN Clustering algorithm
@@ -238,26 +263,40 @@ class SatellitePlot():
     
         return labels, np.array(list(centroids))
 
+    def onpress(self, event):
+        if event.key not in ('a', 'b', 'c'):
+            return
+        if event.key == 'a':
+            self.axP.view_init(elev=0, azim=0)
+        elif event.key == 'b':
+            self.axP.view_init(elev=0, azim=-90)
+        elif event.key == 'c':
+            self.axP.view_init(elev=90, azim=-90)
+        plt.show()
+                
     def onpick3(self, event):
-            ind = event.ind
-            zdirs = None
-            xp = np.take(self.x, ind)
-            yp = np.take(self.y, ind)
-            zp = np.take(self.z, ind)
-            label = 'h,k,l:'+'%.3f %.3f %.3f'%(xp[0],yp[0],zp[0])
-            global txt
-            try:
-                txt.remove()
-            except:
-                print ("First peak picked")
-            txt = self.axP.text(xp[0],yp[0],zp[0],label,zdirs, bbox = self.props)
+        ind = event.ind
+        zdirs = None
+        xp = np.take(self.x, ind)
+        yp = np.take(self.y, ind)
+        zp = np.take(self.z, ind)
+        label = 'h,k,l:'+'%.3f %.3f %.3f'%(xp[0],yp[0],zp[0])
+        global txt
+        try:
+            txt.remove()
+        except:
+            print ("First peak picked")
+        txt = self.axP.text(xp[0],yp[0],zp[0],label,zdirs, bbox = self.props)
+
+
+
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     print ("Wait for peaks in HKL")
     test = SatellitePlot()  # run the main function
 #    test.load_peaks( "/SNS/users/vel/shared/MOD/MOD_Triclinic_P.integrate","/SNS/users/vel/shared/MOD/MOD_Triclinic_P.mat")
-    test.load_peaks( "/SNS/users/vel/shared/MOD/24281_Niggli.integrate","/SNS/users/vel/shared/MOD/24281_Niggli.mat")
+    test.load_peaks( "/SNS/users/vel/CORELLI_59429.peaks","/SNS/users/vel/CORELLI_59429.mat")
 #    test.load_peaks( "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.integrate", "/SNS/TOPAZ/IPTS-22342/shared/PNO_PSI_Mag1_all_bg/PNO_PSI_Mag1_all_bg_Orthorhombic_F.mat")
 #    test.load_peaks('/SNS/TOPAZ/IPTS-10003/shared/integration/8071_P.integrate',"/SNS/TOPAZ/IPTS-10003/shared/integration/8071_P.mat")
 #    test.load_peaks('/SNS/TOPAZ/IPTS-18749/shared/7147A_load_peaks/24281_Niggli.integrate',"/SNS/TOPAZ/IPTS-18749/shared/7147A_load_peaks/24281_Niggli.mat")
