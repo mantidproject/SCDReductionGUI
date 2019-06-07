@@ -59,8 +59,8 @@ import sys
 import shutil
 import time
 import ReduceDictionary
-#sys.path.insert(0,"/opt/mantidnightly/bin")
-sys.path.insert(0,"/opt/mantidnightly/release/bin")
+sys.path.insert(0,"/opt/mantidnightly/bin")
+#sys.path.insert(0,"/opt/mantidnightly/release/bin")
 
 from mantid.simpleapi import *
 from mantid.api import *
@@ -165,8 +165,8 @@ if data_directory is not None:
   full_name = data_directory + "/" + short_filename + ".nxs.h5"
   if not os.path.exists(full_name):
     full_name = data_directory + "/" + short_filename + "_event.nxs"
-  else:
-    full_name = short_filename
+else:
+  full_name = short_filename
 
 print "\nProcessing File: " + full_name + " ......\n"
 
