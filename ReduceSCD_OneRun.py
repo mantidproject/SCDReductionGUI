@@ -160,10 +160,13 @@ minQ ='-%s,-%s,-%s'%(Qmax,Qmax,Qmax)
 # Get the fully qualified input run file name, either from a specified data 
 # directory or from findnexus
 #
+short_filename = "%s_%s" % (instrument_name, str(run))
 if data_directory is not None:
-  full_name = data_directory + "/" + instrument_name + "_" + run + ".nxs.h5"
-else:
-  full_name = instrument_name+"_"+str(run)
+  full_name = data_directory + "/" + short_filename + ".nxs.h5"
+  if not os.path.exists(full_name):
+    full_name = data_directory + "/" + short_filename + "_event.nxs"
+  else:
+    full_name = short_filename
 
 print "\nProcessing File: " + full_name + " ......\n"
 
