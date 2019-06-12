@@ -27,8 +27,7 @@ import numpy as np
 from operator import itemgetter
 from itertools import groupby
 
-#sys.path.insert(0,"/opt/mantidnightly/bin")
-sys.path.insert(0,"/SNS/users/vel/mantid/release/bin")
+sys.path.insert(0,"/opt/mantidnightly/bin")
 
 import ReduceDictionary
 
