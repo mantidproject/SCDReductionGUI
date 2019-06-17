@@ -274,7 +274,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.abcMax = str( 18)
         self.tolerance = str( 0.12)
         self.predictPeaks =  str( True)
-        self.live =  str( False)
+        self.live =  False
         self.pred_minDSpacing = str( 0.499)
         self.pred_maxDSpacing = str( 11.0)
         self.pred_minWavelength = str( 0.4)
@@ -294,7 +294,7 @@ class MantidReduction(QtGui.QMainWindow, design.Ui_MainWindow):
         self.maxWavelength = str( 3.5)
         self.z_score = str( 4.0)
         self.starting_batch_number = str( 1)
-        self.modStruct = str( False)
+        self.modStruct = False
         self._h1 = "H"
         self._k1 = "K"
         self._l1 = "L"
